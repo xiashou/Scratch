@@ -15,7 +15,6 @@ import com.tsingma.core.util.Utils;
 import com.tsingma.system.wechat.service.WxOpenCustomService;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
-import me.chanjar.weixin.mp.bean.kefu.WxMpKefuMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.open.bean.message.WxOpenXmlMessage;
@@ -89,6 +88,10 @@ public class WechatOpenPlatformAction extends BaseAction {
 			if (!StringUtils.equalsIgnoreCase("aes", encrypt_type) || !wxOpenCustomService.getWxOpenComponentService().checkSignature(timestamp, nonce, signature)) {
 	            throw new IllegalArgumentException("非法请求，可能属于伪造的请求！");
 	        }
+			
+			String requestUri = request.getRequestURI();
+			String reqStr[] = requestUri.split("/");
+			this.setAppId(reqStr[2]);
 	        
 	        InputStreamReader inputReader = new InputStreamReader(request.getInputStream(), "UTF-8"); 
     		BufferedReader bufferReader = new BufferedReader(inputReader); 
@@ -104,36 +107,10 @@ public class WechatOpenPlatformAction extends BaseAction {
 	        // aes加密的消息
 	        WxMpXmlMessage inMessage = WxOpenXmlMessage.fromEncryptedMpXml(requestBody.toString(), wxOpenCustomService.getWxOpenConfigStorage(), timestamp, nonce, msg_signature);
 	        log.warn("\n消息解密后内容为：\n" + inMessage.toString());
-	        // 全网发布测试用例
-	        if (StringUtils.equalsAnyIgnoreCase(appId, "wxd101a85aa106f53e", "wx570bc396a51b8ff8")) {
-	            try {
-	                if (StringUtils.equals(inMessage.getMsgType(), "text")) {
-	                    if (StringUtils.equals(inMessage.getContent(), "TESTCOMPONENT_MSG_TYPE_TEXT")) {
-	                        out = WxOpenXmlMessage.wxMpOutXmlMessageToEncryptedXml(
-	                                WxMpXmlOutMessage.TEXT().content("TESTCOMPONENT_MSG_TYPE_TEXT_callback")
-	                                        .fromUser(inMessage.getToUser())
-	                                        .toUser(inMessage.getFromUser())
-	                                        .build(),
-	                                        wxOpenCustomService.getWxOpenConfigStorage()
-	                        );
-	                    } else if (StringUtils.startsWith(inMessage.getContent(), "QUERY_AUTH_CODE:")) {
-	                        String msg = inMessage.getContent().replace("QUERY_AUTH_CODE:", "") + "_from_api";
-	                        WxMpKefuMessage kefuMessage = WxMpKefuMessage.TEXT().content(msg).toUser(inMessage.getFromUser()).build();
-	                        wxOpenCustomService.getWxOpenComponentService().getWxMpServiceByAppid(appId).getKefuService().sendKefuMessage(kefuMessage);
-	                    }
-	                } else if (StringUtils.equals(inMessage.getMsgType(), "event")) {
-	                    WxMpKefuMessage kefuMessage = WxMpKefuMessage.TEXT().content(inMessage.getEvent() + "from_callback").toUser(inMessage.getFromUser()).build();
-	                    wxOpenCustomService.getWxOpenComponentService().getWxMpServiceByAppid(appId).getKefuService().sendKefuMessage(kefuMessage);
-	                }
-	            } catch (WxErrorException e) {
-	            	log.error("callback", e);
-	            }
-	        } else {
-	            WxMpXmlOutMessage outMessage = wxOpenCustomService.getWxOpenMessageRouter().route(inMessage, appId);
-	            if(outMessage != null){
-	                out = WxOpenXmlMessage.wxMpOutXmlMessageToEncryptedXml(outMessage, wxOpenCustomService.getWxOpenConfigStorage());
-	            }
-	        }
+            WxMpXmlOutMessage outMessage = wxOpenCustomService.getWxOpenMessageRouter().route(inMessage, appId);
+            if(outMessage != null){
+                out = WxOpenXmlMessage.wxMpOutXmlMessageToEncryptedXml(outMessage, wxOpenCustomService.getWxOpenConfigStorage());
+            }
 	        pw.println(out);
 		} catch(Exception e) {
 			log.error(Utils.getErrorMessage(e));
@@ -179,6 +156,22 @@ public class WechatOpenPlatformAction extends BaseAction {
 
 	public void setNonce(String nonce) {
 		this.nonce = nonce;
+	}
+
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
 	
 	
