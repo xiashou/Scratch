@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+	<!-- 开发模式下使用，这样可以打印出更详细的日志信息 -->
+	<constant name="struts.devMode" value="true" />
+	<!-- 指定Web应用的默认编码，相当于调用request的setCharacterEncoding方法 -->
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<!-- 设置浏览器是否缓存静态内容，默认值为true(生产环境下使用)，开发阶段最好关闭 -->
+	<constant name="struts.serve.static.browserCache" value="false" />
+	<!-- 当Struts2的配置文件修改后，系统是否自动重新加载配置文件，默认值为false(生产环境下使用)，开发阶段最好打开 -->
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<!-- 默认的视图主题 -->
+	<constant name="struts.ui.theme" value="simple" />
+	<!-- 把Action对象交给Spring创建和管理 -->
+	<constant name="struts.objectFactory" value="spring" />
+	<!-- Struts2处理的请求后缀,默认值是action -->
+	<constant name="struts.action.extension" value="atc," />
+	<!-- 允许访问的action名 -->
+	<constant name="struts.allowed.action.names" value="[a-zA-Z]*" />
+	<constant name="struts.multipart.parser" value="pell" />
+	<constant name="struts.multipart.maxSize" value="10485760"/>
+	
+	<constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+
+	<!-- 全局 -->
+	<package name="tsm-struts" extends="json-default">
+	
+		<!-- 定义权限拦截器 -->  
+		<interceptors>
+     		<interceptor name="authorityInterceptor" class="com.tsingma.common.interceptor.AuthorityInterceptor" />
+     		<interceptor-stack name="authorityStack" >
+	      		<interceptor-ref name="defaultStack" />
+     		</interceptor-stack>
+    	</interceptors>
+    	
+    	<!-- 定义默认的拦截器栈，会自动注册到所有action中 -->  
+    	<default-interceptor-ref name="authorityStack"></default-interceptor-ref>  
+    	
+		<global-results>
+			<result name="error">/mgr/common/error/error.jsp</result>
+			<result name="404">/mgr/common/error/404.jsp</result>
+			<result name="timeout1">/mgr/common/error/timeout1.jsp</result>
+			<result name="timeout2">/mgr/common/error/timeout2.jsp</result>
+		</global-results>
+		
+		<global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.Exception"></exception-mapping>
+		</global-exception-mappings>
+	</package>
+	
+	<!-- 其他模块配置引入 -->
+	<include file="config/struts-*.xml"></include>
+
+	<package name="default" extends="struts-default">
+		<default-action-ref name="notFound" />
+		<action name="notFound">
+			<result>/mgr/common/error/404.jsp</result>
+		</action>
+	</package>
+	
+
+</struts>

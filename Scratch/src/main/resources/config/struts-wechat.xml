@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <!-- 微信开放平台 -->
+    <package name="wechatPlatform" namespace="/wechatPlatform" extends="tsm-struts">
+    	
+    	<!-- 授权事件接收 -->
+        <action name="wechatAuthorization" class="WechatOpenPlatformAction" method="wechatAuthorization" />
+        
+        <!-- 消息与事件接收 -->
+        <action name="wechatMessageEvent" class="WechatOpenPlatformAction" method="wechatMessageEvent" />
+        
+    </package>
+    
+</struts>
