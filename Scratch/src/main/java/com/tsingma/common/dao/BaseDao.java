@@ -284,7 +284,7 @@ public class BaseDao<T, PK extends Serializable> {
         CriteriaQuery<T> crq=crb.createQuery(entityClass);  
         Root<T> root=crq.from(entityClass);  
         crq.select(root);
-        crq.where(crb.like(root.get(propertyName),value.toString()));
+        crq.where(crb.equal(root.get(propertyName),value.toString()));
         Query<T> q = getSession().createQuery(crq);
 		
 		return q.uniqueResult();

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <!-- 后台管理 -->
+    <package name="mgr" namespace="/" extends="tsm-struts">
+    	
+        <action name="userLogin" class="loginAction" method="userLogin" >
+            <result type="json">
+            	<param name="ignoreHierarchy">false</param> 
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        
+    </package>
+    
+</struts>

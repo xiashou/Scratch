@@ -54,6 +54,7 @@
 		<property name="packagesToScan">
 			<list>
 				<value>com.tsingma.*.model</value>
+				<value>com.tsingma.*.*.model</value>
 			</list>
 		</property>
 

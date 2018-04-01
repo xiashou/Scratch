@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <!-- 微信小程序 -->
+    <package name="setting" namespace="/biz/setting" extends="tsm-struts">
+    	
+        <action name="queryAppName" class="SettingAction" method="queryAppName" >
+        	<result type="json">
+            	<param name="root">appName</param>
+            </result>
+        </action>
+        
+        <action name="queryBannerList" class="SettingAction" method="queryBannerList" >
+        	<result type="json">
+            	<param name="root">bannerList</param>
+            </result>
+        </action>
+        
+    </package>
+    
+</struts>

@@ -7,12 +7,45 @@
 
     <!-- 微信开放平台 -->
     <package name="wechatPlatform" namespace="/wechatPlatform" extends="tsm-struts">
-    	
     	<!-- 授权事件接收 -->
         <action name="wechatAuthorization" class="WechatOpenPlatformAction" method="wechatAuthorization" />
-        
+    </package>
+    <package name="wechatPlatformMessage" namespace="/wechatPlatform/*" extends="tsm-struts">
         <!-- 消息与事件接收 -->
         <action name="wechatMessageEvent" class="WechatOpenPlatformAction" method="wechatMessageEvent" />
+    </package>
+    
+    <!-- 微信开放平台 -->
+    <package name="platformApi" namespace="/platformApi" extends="tsm-struts">
+    	
+    	<!-- 授权事件接收 -->
+        <action name="gotoPreAuthUrl" class="WechatOpenApiAction" method="gotoPreAuthUrl" >
+        	<result name="success" type="redirect">${authUrl}</result>
+        </action>
+        
+        <action name="authJump" class="WechatOpenApiAction" method="authJump" />
+        
+        <action name="getAuthorizerInfo" class="WechatOpenApiAction" method="getAuthorizerInfo" />
+        
+    </package>
+    
+    <!-- 微信小程序 -->
+    <package name="wechatMini" namespace="/wechatMini" extends="tsm-struts">
+    	
+        <action name="programPortal" class="WechatMiniProAction" method="programPortal" />
+        
+    </package>
+    
+    <!-- 微信小程序 -->
+    <package name="miniApi" namespace="/miniApi" extends="tsm-struts">
+    	
+        <action name="userLogin" class="WechatMiniApiAction" method="userLogin" >
+        	<result type="json">
+            	<param name="root">wxSession</param>
+            </result>
+        </action>
+        
+        <action name="userRegister" class="WechatMiniApiAction" method="userRegister" />
         
     </package>
     

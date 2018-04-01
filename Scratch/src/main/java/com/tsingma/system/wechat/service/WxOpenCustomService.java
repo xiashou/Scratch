@@ -28,24 +28,21 @@ public class WxOpenCustomService extends WxOpenServiceImpl {
 		
 		Properties props = new Properties(); 
         InputStream inputStream = null; 
-        try { 
-        	System.out.println("Loading wechat properties...");
+        try {
+        	System.out.println("Loading wechatPlatform properties...");
             inputStream = getClass().getResourceAsStream("/wechat.properties");
-            props.load(inputStream); 
-            WxOpenCustomConfigStorage inRedisConfigStorage = new WxOpenCustomConfigStorage();
-            inRedisConfigStorage.setComponentAppId((String) props.get("wechat.componentAppId"));
-            inRedisConfigStorage.setComponentAppSecret((String) props.get("wechat.componentSecret"));
-            inRedisConfigStorage.setComponentToken((String) props.get("wechat.componentToken"));
-            inRedisConfigStorage.setComponentAesKey((String) props.get("wechat.componentAesKey"));
-            setWxOpenConfigStorage(inRedisConfigStorage);
-            
+            props.load(inputStream);
+            WxOpenCustomConfigStorage wxOpenConfigStorage = new WxOpenCustomConfigStorage();
+            wxOpenConfigStorage.setComponentAppId((String) props.get("wechat.componentAppId"));
+            wxOpenConfigStorage.setComponentAppSecret((String) props.get("wechat.componentSecret"));
+            wxOpenConfigStorage.setComponentToken((String) props.get("wechat.componentToken"));
+            wxOpenConfigStorage.setComponentAesKey((String) props.get("wechat.componentAesKey"));
+            setWxOpenConfigStorage(wxOpenConfigStorage);
         } catch (IOException ex) { 
         	logger.error(Utils.getErrorMessage(ex));
             ex.printStackTrace(); 
         }
 		
-        
-        
 //        wxOpenMessageRouter = new WxOpenMessageRouter(this);
 //        wxOpenMessageRouter.rule().handler(new WxMpMessageHandler() {
 //            @Override

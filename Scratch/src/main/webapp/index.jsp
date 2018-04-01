@@ -15,6 +15,7 @@
 </head>
 <body>
 	<div class="container">  
+		<a href='/platformApi/gotoPreAuthUrl'>go</a>
 		<p>
 			<button type="button" class="btn btn-success" onclick="window.location.href='add.jsp'">添 加</button>
 			<button type="button" class="btn btn-default">Success</button>
