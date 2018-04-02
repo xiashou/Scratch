@@ -1,48 +1,36 @@
-<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + path + ":" + request.getServerPort();
+%>
+<!DOCTYPE HTML>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title data-i18n-text="title">淘大师</title>
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <link type="text/css" rel="stylesheet" href="/dist/bootstrap/css/bootstrap.css">
-	<style>
-		.container {width:100%;}
-		.container table {width:100%; margin: 0 auto;}
-		.container p {width:100%; margin: 10px auto; text-align: left;}
-	</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>智能工匠 - Desktop Sample App</title>
+
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>/resources/css/desktop.css" />
+
+    <script type="text/javascript" src="<%=basePath %>/resources/js/include-ext.js"></script>
+    <script type="text/javascript" src="<%=basePath %>/dist/ext/locale/ext-lang-zh_CN.js"></script>
+    <script type="text/javascript">
+        Ext.Loader.setPath({
+            'Ext.ux.desktop': '/mgr/frame',
+            MyDesktop: '/mgr/ux'
+        });
+
+        Ext.require('MyDesktop.App');
+
+        var myDesktopApp;
+        Ext.onReady(function () {
+            myDesktopApp = new MyDesktop.App();
+        });
+    </script>
 </head>
+
 <body>
-	<div class="container">  
-		<a href='/platformApi/gotoPreAuthUrl'>go</a>
-		<p>
-			<button type="button" class="btn btn-success" onclick="window.location.href='add.jsp'">添 加</button>
-			<button type="button" class="btn btn-default">Success</button>
-		</p>
-        <table class="table table-striped table-hover table-bordered">  
-            <thead>  
-                <tr>  
-                    <th>表头1</th>  
-                    <th>表头2</th>  
-                    <th>表头3</th>  
-                </tr>  
-            </thead>  
-            <tbody>  
-                <tr>  
-                    <td>第1行第1列</td>  
-                    <td>第1行第2列</td>  
-                    <td>第1行第3列</td></tr>  
-                <tr>  
-                    <td>第2行第1列</td>  
-                    <td>第2行第2列</td>  
-                    <td>第2行第3列</td></tr>  
-                <tr>  
-                    <td>第3行第1列</td>  
-                    <td>第3行第2列</td>  
-                    <td>第3行第3列</td></tr>  
-                </tbody>  
-        </table>  
-    </div>  
+
+    <a href="http://www.sencha.com" target="_blank" alt="2015 © copyright" id="poweredby"><div></div></a>
+
 </body>
 </html>

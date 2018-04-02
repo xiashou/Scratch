@@ -15,6 +15,14 @@
             </result>
         </action>
         
+        <action name="index">
+            <result></result>
+        </action>
+        
+        <action name="index">
+            <result>/index.jsp</result>
+        </action>
+        
     </package>
     
 </struts>
