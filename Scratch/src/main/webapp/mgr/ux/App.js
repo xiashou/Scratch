@@ -28,7 +28,7 @@ Ext.define('MyDesktop.App', {
 //        'MyDesktop.CouponManagement',	//优惠券管理
 //        'MyDesktop.ScratchSetting',		//刮奖设置
 //        'MyDesktop.MemberReport',		//会员报表
-//        'MyDesktop.BannerManagement',	//Banner管理
+        'Business.BannerManagement',	//Banner管理
 //        'MyDesktop.CouponReport',		//会员优惠券报表
 //        'MyDesktop.WinningManagement',	//中奖报表
         
@@ -54,7 +54,8 @@ Ext.define('MyDesktop.App', {
             new MyDesktop.Notepad(),
             new MyDesktop.BogusMenuModule(),
             new MyDesktop.BogusModule(),
-            new MyDesktop.DeptReport()
+            new MyDesktop.DeptReport(),
+            new Business.BannerManagement()
         ];
     },
 
@@ -75,7 +76,7 @@ Ext.define('MyDesktop.App', {
                     { name: 'Accordion Window', iconCls: 'accordion-shortcut', module: 'acc-win' },
                     { name: 'Notepad', iconCls: 'notepad-shortcut', module: 'notepad' },
                     { name: 'System Status', iconCls: 'cpu-shortcut', module: 'systemstatus'},
-                    { name: '门店列表', iconCls: 'store-shortcut', module: 'dept-rept'}
+                    { name: 'Banner图片管理', iconCls: 'banner-shortcut', module: 'banner-mgr'}
                 ]
             }),
 
@@ -137,4 +138,5 @@ Ext.define('MyDesktop.App', {
         });
         dlg.show();
     }
+    
 });

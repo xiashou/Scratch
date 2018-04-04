@@ -203,9 +203,6 @@ div.ux-taskbar div.x-toolbar {
 .grid-shortcut {
     background-image: url(/resources/img/desktop/grid48x48.png);
 }
-.store-shortcut {
-    background-image: url(/resources/img/desktop/store48.png);
-}
 
 .notepad-shortcut {
     background-image: url(/resources/img/desktop/notepadLarge.png);
@@ -275,9 +272,7 @@ div.ux-taskbar div.x-toolbar {
 .tabs {
     background-image:url(/resources/img/desktop/tabs.gif) !important;
 }
-.store {
-    background-image:url(/resources/img/desktop/store.png) !important;
-}
+
 
 
 /*----------------------------------------------------
@@ -311,3 +306,40 @@ div.ux-taskbar div.x-toolbar {
 .user-suit {
     background-image:url(/resources/img/icons/fam/user_suit.gif) !important;
 }
+
+
+
+.store {
+    background-image:url(/resources/img/desktop/store.png) !important;
+}
+.store-shortcut {
+    background-image: url(/resources/img/desktop/store48.png);
+}
+.banner {
+    background-image:url(/resources/img/desktop/banner.png) !important;
+}
+.banner-shortcut {
+    background-image: url(/resources/img/desktop/banner48.png);
+}
+.coupon {
+    background-image:url(/resources/img/desktop/coupon.png) !important;
+}
+.coupon-shortcut {
+    background-image: url(/resources/img/desktop/coupon48.png);
+}
+.user {
+    background-image:url(/resources/img/desktop/user.png) !important;
+}
+.user-shortcut {
+    background-image: url(/resources/img/desktop/user48.png);
+}
+.winning {
+    background-image:url(/resources/img/desktop/winning.png) !important;
+}
+.winning-shortcut {
+    background-image: url(/resources/img/desktop/winning48.png);
+}
+
+
+
+

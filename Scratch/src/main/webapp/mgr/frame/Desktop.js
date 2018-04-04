@@ -435,5 +435,23 @@ Ext.define('Ext.ux.desktop.Desktop', {
         }
 
         me.taskbar.setActiveButton(activeWindow && activeWindow.taskButton);
+    },
+    
+    getPagesizeCombo: function() {
+    	return new Ext.form.ComboBox({
+    		name : 'pagesize',
+    		triggerAction : 'all',
+    		mode : 'local',
+    		store : new Ext.data.ArrayStore({
+    			fields : [ 'value', 'text' ],
+    			data : [ [ 10, '10条/页' ], [ 20, '20条/页' ], [ 50, '50条/页' ], [ 100, '100条/页' ], [ 200, '200条/页' ], [ 500, '500条/页' ], [ 1000000, '更多条' ] ]
+    		}),
+    		valueField : 'value',
+    		displayField : 'text',
+    		value : 500,
+    		editable : false,
+    		width : 85
+    	});
     }
+    
 });

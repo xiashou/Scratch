@@ -10,13 +10,15 @@
 <title>智能工匠 - Desktop Sample App</title>
 
     <link rel="stylesheet" type="text/css" href="<%=basePath %>/resources/css/desktop.css" />
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>/resources/css/icon.css" />
 
     <script type="text/javascript" src="<%=basePath %>/resources/js/include-ext.js"></script>
     <script type="text/javascript" src="<%=basePath %>/dist/ext/locale/ext-lang-zh_CN.js"></script>
     <script type="text/javascript">
         Ext.Loader.setPath({
             'Ext.ux.desktop': '/mgr/frame',
-            MyDesktop: '/mgr/ux'
+            MyDesktop: '/mgr/ux',
+            Business: '/mgr/biz'
         });
 
         Ext.require('MyDesktop.App');

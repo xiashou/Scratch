@@ -21,11 +21,13 @@
 	<constant name="struts.action.extension" value="atc," />
 	<!-- 允许访问的action名 -->
 	<constant name="struts.allowed.action.names" value="[a-zA-Z]*" />
-	<constant name="struts.multipart.parser" value="pell" />
+	<bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="myRequestParser" class="com.tsingma.common.util.CosMultiPartRequest" scope="default" optional="true" />
+	<constant name="struts.multipart.parser" value="myRequestParser" />
+	<constant name="struts.multipart.handler" value="myRequestParser" />
 	<constant name="struts.multipart.maxSize" value="10485760"/>
 	
 	<constant name="struts.enable.DynamicMethodInvocation" value="true"/>
-
+	
 	<!-- 全局 -->
 	<package name="tsm-struts" extends="json-default">
 	

@@ -1,0 +1,57 @@
+
+.add {
+    background-image: url(/resources/img/icons/add.png) !important;
+	background-repeat: no-repeat !important;
+}
+.delete {
+    background-image: url(/resources/img/icons/delete.png) !important;
+	background-repeat: no-repeat !important;
+}
+.cancel{
+    background-image: url(/resources/img/icons/cancel.png) !important;
+	background-repeat: no-repeat !important;
+}
+.accept{
+    background-image: url(/resources/img/icons/accept.png) !important;
+	background-repeat: no-repeat !important;
+}
+.stop {
+	background-image: url(/resources/img/icons/stop.png) !important;
+	background-repeat: no-repeat !important;
+}
+.pencil {
+	background-image: url(/resources/img/icons/pencil.png) !important;
+	background-repeat: no-repeat !important;
+}
+.preview {
+	background-image: url(/resources/img/icons/preview.png) !important;
+	background-repeat: no-repeat !important;
+}
+.zoom {
+	background-image: url(/resources/img/icons/zoom.png) !important;
+	background-repeat: no-repeat !important;
+}
+.edit2 {
+	background-image: url(/resources/img/icons/edit2.png) !important;
+	background-repeat: no-repeat !important;
+}
+.plugin {
+	background-image: url(/resources/img/icons/plugin.png) !important;
+	background-repeat: no-repeat !important;
+}
+.page_excel {
+	background-image: url(/resources/img/icons/page_excel.png) !important;
+	background-repeat: no-repeat !important;
+}
+.image {
+	background-image: url(/resources/img/icons/image.png) !important;
+	background-repeat: no-repeat !important;
+}
+.upload {
+	background-image: url(/resources/img/icons/upload.png) !important;
+	background-repeat: no-repeat !important;
+}
+.lock {
+	background-image: url(/resources/img/icons/lock.png) !important;
+	background-repeat: no-repeat !important;
+}
