@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <!-- 会员 -->
+    <package name="member" namespace="/biz/member" extends="tsm-struts">
+        
+        <action name="queryMemberList" class="MemberAction" method="queryMemberList" >
+            <result type="json">
+            	<param name="ignoreHierarchy">false</param> 
+            	<param name="includeProperties">memberList.*, totalCount, success, msg</param>
+            </result>
+        </action>
+        
+    </package>
+    
+</struts>

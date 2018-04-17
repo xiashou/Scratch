@@ -3,7 +3,7 @@
  * xs
  * 2018/04/03
  */
-Ext.define('Business.StoreManagement', {
+Ext.define('Business.MemberReport', {
 	extend: 'Ext.ux.desktop.Module',
 
     requires: [
@@ -12,26 +12,27 @@ Ext.define('Business.StoreManagement', {
         'Ext.grid.RowNumberer'
     ],
 
-    id:'store-mgr',
+    id:'member-rpt',
 
     init : function(){
         this.launcher = {
-            text: '商户管理',
-            iconCls:'store'
+            text: '会员报表',
+            iconCls:'member'
         };
     },
 
     createWindow : function(){
         var desktop = this.app.getDesktop();
-        var win = desktop.getWindow('store-mgr');
+        var win = desktop.getWindow('member-rpt');
         var store = new Ext.data.Store({
-    		pageSize : 500,
-    		fields: ['id', 'appid', 'name', 'address', 'phone', 'introduction', 'headUrl', 'imageUrl', 'locationx', 'locationy', 'enable', 'createdTime'],
+    		pageSize : 20,
+    		fields: ['id', 'appid', 'unionId', 'openId', 'nickName', 'gender', 'language', 'city', 'province', 'country', 'avatarUrl', 'timestamp'],
     		proxy : {
     			type : 'ajax',
-    			url : '/biz/store/queryListByAppid.atc',
+    			url : '/biz/member/queryMemberList.atc',
     			reader : {
-    				root : 'storeList'
+    				root : 'memberList',
+    				totalProperty: 'totalCount'
     			}
     		}
     	});
@@ -208,26 +209,13 @@ Ext.define('Business.StoreManagement', {
       			return '<img src="/resources/img/noImage.png" style="height:20px" />';
         };
         
-        var largeRenderer = function(value, metaData, record) {
-    		if(value){
-      			metaData.tdAttr = "data-qtip=\"<img src='/upload/store/" + record.data.appid + '/' + value + "' style='width:375px; height:204px'/>\""; 
-      			return '<img src="/upload/store/' + record.data.appid + '/' + value + '" style="height:20px" onerror="this.src=\'/resources/img/noImage.png\'" />';
-      		} else
-      			return '<img src="/resources/img/noImage.png" style="height:20px" />';
-        };
-	  	
-	  	var selModel = Ext.create('Ext.selection.CheckboxModel', {
-    		injectCheckbox : 1,
-    		mode : 'SINGLE'
-    	});
-	  	
         if(!win){
             win = desktop.createWindow({
-                id: 'store-mgr',
-                title:'商户管理',
+                id: 'member-rpt',
+                title:'会员报表',
                 width:900,
                 height:580,
-                iconCls: 'store',
+                iconCls: 'member',
                 animCollapse:false,
                 constrainHeader:true,
                 layout: 'fit',
@@ -235,7 +223,6 @@ Ext.define('Business.StoreManagement', {
                 	border: false,
                     xtype: 'grid',
                     store: store,
-                    selModel: selModel,
                     stripeRows : true,
                     frame : false,
                     viewConfig : {enableTextSelection : true},
@@ -247,38 +234,33 @@ Ext.define('Business.StoreManagement', {
 	                		dataIndex : 'id',
 	                		hidden: true
 	                    },{
-	                    	text : '店名',
-	                    	dataIndex : 'name',
-	                		width : '15%'
+	                    	text : '头像',
+	                    	dataIndex : 'avatarUrl',
+	                		width : '10%'
 	                    },{
-	                    	text : '联系电话',
-	                    	dataIndex : 'phone',
-	                    	width : '12%'
+	                    	text : '昵称',
+	                    	dataIndex : 'nickName',
+	                    	width : '25%'
 	                    },{
-	                    	text : '地址',
-	                		dataIndex : 'address',
-	                		width : '25%'
+	                    	text : '性别',
+	                		dataIndex : 'gender',
+	                		width : '10%'
 	                    },{
-	                    	text : '小图',
-	                    	dataIndex : 'headUrl',
-	                    	width : '8%',
-	                    	renderer: smallRenderer
+	                    	text : '语言',
+	                    	dataIndex : 'language',
+	                    	width : '10%'
 	                    },{
-	                    	text : '大图',
-	                    	dataIndex : 'imageUrl',
-	                    	width : '8%',
-	                    	renderer: largeRenderer
+	                    	text : '城市',
+	                    	dataIndex : 'city',
+	                    	width : '10%'
 	                    },{
-	                    	text : '是否可用',
-	                    	dataIndex : 'enable',
-	                    	width : '8%',
-	                    	renderer: function(value){
-	            				return value ? '<font color=green>正常</font>' : '<font color=red>锁定</font>'
-	            			}
+	                    	text : '省份',
+	                    	dataIndex : 'province',
+	                    	width : '10%'
 	                    },{
-	                    	text : '创建时间',
-	                    	dataIndex : 'createdTime',
-	                    	width : '16%'
+	                    	text : 'openId',
+	                    	dataIndex : 'openId',
+	                    	width : '17%'
 	                    }]
                     }, w = Ext.create('Ext.Window', {
                         width: 520,
@@ -286,13 +268,6 @@ Ext.define('Business.StoreManagement', {
                         constrain: true,
                         layout: 'fit',
                         items: [f]
-                    }), mw = Ext.create('Ext.Window', {
-                    	width: 635,
-                        height: 610,
-                        title:'选取地址',
-                        constrain: false,
-						closeAction:'hide',
-                        layout: 'fit'
                     })
                 ],
                 tbar:[{

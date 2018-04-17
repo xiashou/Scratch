@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <!-- 商户 -->
+    <package name="store" namespace="/biz/store" extends="tsm-struts">
+        
+        <action name="queryListByAppid" class="StoreAction" method="queryListByAppid" >
+        	<result type="json">
+            	<param name="root">storeList</param>
+            </result>
+        </action>
+        
+        <action name="insertStore" class="StoreAction" method="insertStore" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="updateStore" class="StoreAction" method="updateStore" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="deleteStore" class="StoreAction" method="deleteStore" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        
+    </package>
+    
+</struts>

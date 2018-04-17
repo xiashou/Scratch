@@ -43,3 +43,20 @@ CREATE TABLE `b_banners` (
 	`linkUrl` varchar(50) NULL COMMENT '链接地址',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Banner表';
+
+DROP TABLE IF EXISTS `b_store`;
+CREATE TABLE `b_store` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+	`appid` varchar(50) DEFAULT NULL COMMENT 'appid',
+  `name` varchar(100) NOT NULL COMMENT '门店名称',
+  `address` varchar(200) DEFAULT NULL COMMENT '详细地址',
+  `phone` varchar(20) DEFAULT NULL COMMENT '联系电话',
+  `introduction` varchar(1000) DEFAULT NULL COMMENT '简介',
+  `headUrl` varchar(200) DEFAULT NULL COMMENT '门头照片',
+  `imageUrl` varchar(200) DEFAULT NULL COMMENT '大图照片',
+  `locationx` varchar(20) DEFAULT NULL COMMENT '国家',
+  `locationy` varchar(20) DEFAULT NULL COMMENT '头像',
+  `enable` int(1) DEFAULT NULL COMMENT '是否可用',
+  `createdTime` varchar(20) DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='门店表';

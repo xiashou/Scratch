@@ -26,6 +26,12 @@
             	<param name="includeProperties">success, msg</param>	
             </result>
         </action>
+        <action name="deleteBanner" class="SettingAction" method="deleteBanner" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
         
     </package>
     

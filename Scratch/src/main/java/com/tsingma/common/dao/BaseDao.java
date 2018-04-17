@@ -213,6 +213,11 @@ public class BaseDao<T, PK extends Serializable> {
 
 	}
 	
+	public List<T> listPage(CriteriaQuery<T> crq, int pageNo, int pageSize) {
+		return getSession().createQuery(crq).setFirstResult(pageNo).setMaxResults(pageSize).getResultList();
+
+	}
+	
 	
 	/**
 	 * <根据HQL语句，得到对应的list>

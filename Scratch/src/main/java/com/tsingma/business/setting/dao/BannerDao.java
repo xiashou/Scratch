@@ -18,6 +18,6 @@ public class BannerDao extends BaseDao<Banner, Serializable> {
 	 * @throws Exception
 	 */
 	public List<Banner> loadListByAppid(String appid) throws Exception {
-		return super.listByHql("from Banner b where b.appid = ?0", appid);
+		return super.listByHql("from Banner b where b.appid = ?0 order by b.sortNo", appid);
 	}
 }

@@ -16,6 +16,7 @@ public class Banner {
 	private String appid;
 	private String bannerUrl;
 	private String linkUrl;
+	private Integer sortNo;
 	
 	
 	public Integer getId() {
@@ -41,6 +42,12 @@ public class Banner {
 	}
 	public void setLinkUrl(String linkUrl) {
 		this.linkUrl = linkUrl;
+	}
+	public Integer getSortNo() {
+		return sortNo;
+	}
+	public void setSortNo(Integer sortNo) {
+		this.sortNo = sortNo;
 	}
 	
 }

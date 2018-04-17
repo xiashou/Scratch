@@ -17,7 +17,6 @@ import com.tsingma.business.setting.model.Banner;
 import com.tsingma.business.setting.service.BannerService;
 import com.tsingma.common.action.BaseAction;
 import com.tsingma.core.util.Utils;
-import com.tsingma.system.wechat.service.WxOpenCustomService;
 
 @Scope("prototype")
 @Component("SettingAction")
@@ -28,8 +27,6 @@ public class SettingAction extends BaseAction {
 	
 	@Autowired
 	private BannerService bannerService;
-	@Autowired
-	private WxOpenCustomService wxOpenCustomService;
 	
 	private String appid;
 	private Banner banner;
@@ -62,7 +59,7 @@ public class SettingAction extends BaseAction {
 	 */
 	public String queryBannerList() {
 		try {
-			bannerList = bannerService.getListByAppid(wxOpenCustomService.getWxOpenConfigStorage().getComponentAppId());
+			bannerList = bannerService.getListByAppid(super.getWxMaConfig().getAppid());
 		} catch(Exception e) {
 			log.error(Utils.getErrorMessage(e));
 		}
@@ -73,7 +70,7 @@ public class SettingAction extends BaseAction {
 		try {
 			if(!Utils.isEmpty(banner)){
 				
-				String appId = wxOpenCustomService.getWxOpenConfigStorage().getComponentAppId();
+				String appId = super.getWxMaConfig().getAppid();
 				
 				if(!Utils.isEmpty(appId)){
 					if (!Utils.isEmpty(upload)) {
@@ -95,35 +92,9 @@ public class SettingAction extends BaseAction {
 			        	banner.setAppid(appId);
 			        	banner.setBannerUrl(uploadFileName);
 			        }
-				}
-				
-				
-				
-//					banner.setAppId(wechatApp.getAuthorizerAppId());
-//					if (!Utils.isEmpty(upload)) {
-//			        	String realpath = ServletActionContext.getServletContext().getRealPath("/upload/mall/banner");
-//			        	String suffix;
-//			        	if(uploadFileName != null && !"".equals(uploadFileName) && uploadFileName.indexOf(".") > 0)
-//							suffix = uploadFileName.substring(uploadFileName.lastIndexOf(".") + 1).toLowerCase();
-//						else
-//							suffix = "";
-//			        	if("jpeg".equals(suffix) || "jpg".equals(suffix) || "png".equals(suffix) || "gif".equals(suffix) || "bmp".equals(suffix)){
-//			        		uploadFileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "." + suffix;
-//			        		File savefile = new File(new File(realpath), uploadFileName);
-//			        		if (!savefile.getParentFile().exists())
-//			        			savefile.getParentFile().mkdirs();
-//			        		FileUtils.copyFile(upload, savefile);
-//			        		this.setResult(true, "上传成功！");
-//			        	} else
-//			        		this.setResult(false, "请上传正确的图片格式！");
-//			        	banner.setPicture(uploadFileName);
-				
 					bannerService.insert(banner);
 					this.setResult(true, "添加成功！");
-//				} else
-//					this.setResult(true, "请先联系管理员配置公众号！");
-				
-				this.setResult(true, "添加成功！");
+				}
 			} else
 				this.setResult(false, "参数不能为空！");
 		} catch(Exception e) {

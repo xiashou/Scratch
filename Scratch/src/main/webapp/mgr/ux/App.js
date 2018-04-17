@@ -21,15 +21,15 @@ Ext.define('MyDesktop.App', {
         'MyDesktop.Notepad',
         'MyDesktop.BogusMenuModule',
         'MyDesktop.BogusModule',
-        'MyDesktop.DeptReport',
+//        'MyDesktop.DeptReport',
 //        'MyDesktop.Blockalanche',
         
-//        'MyDesktop.StoreManagement',	//门店管理
-//        'MyDesktop.CouponManagement',	//优惠券管理
+        'Business.StoreManagement',			//门店管理
+//        'MyDesktop.CouponManagement',		//优惠券管理
 //        'MyDesktop.ScratchSetting',		//刮奖设置
-//        'MyDesktop.MemberReport',		//会员报表
-        'Business.BannerManagement',	//Banner管理
-//        'MyDesktop.CouponReport',		//会员优惠券报表
+        'Business.MemberReport',			//会员报表
+        'Business.BannerManagement',		//Banner管理
+//        'MyDesktop.CouponReport',			//会员优惠券报表
 //        'MyDesktop.WinningManagement',	//中奖报表
         
         'MyDesktop.Settings'
@@ -54,8 +54,10 @@ Ext.define('MyDesktop.App', {
             new MyDesktop.Notepad(),
             new MyDesktop.BogusMenuModule(),
             new MyDesktop.BogusModule(),
-            new MyDesktop.DeptReport(),
-            new Business.BannerManagement()
+//            new MyDesktop.DeptReport(),
+            new Business.BannerManagement(),
+            new Business.StoreManagement(),
+            new Business.MemberReport()
         ];
     },
 
@@ -76,7 +78,9 @@ Ext.define('MyDesktop.App', {
                     { name: 'Accordion Window', iconCls: 'accordion-shortcut', module: 'acc-win' },
                     { name: 'Notepad', iconCls: 'notepad-shortcut', module: 'notepad' },
                     { name: 'System Status', iconCls: 'cpu-shortcut', module: 'systemstatus'},
-                    { name: 'Banner图片管理', iconCls: 'banner-shortcut', module: 'banner-mgr'}
+                    { name: 'Banner图片管理', iconCls: 'banner-shortcut', module: 'banner-mgr'},
+                    { name: '商户管理', iconCls: 'store-shortcut', module: 'store-mgr'},
+                    { name: '会员报表', iconCls: 'member-shortcut', module: 'member-rpt'}
                 ]
             }),
 

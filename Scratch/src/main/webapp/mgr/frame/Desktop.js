@@ -418,7 +418,7 @@ Ext.define('Ext.ux.desktop.Desktop', {
         }
 
         if (last) {
-            if (last.el.dom) {
+            if (last.el && last.el.dom) {
                 last.addCls(me.inactiveWindowCls);
                 last.removeCls(me.activeWindowCls);
             }
@@ -450,8 +450,25 @@ Ext.define('Ext.ux.desktop.Desktop', {
     		displayField : 'text',
     		value : 500,
     		editable : false,
-    		width : 85
+    		width : 90
     	});
+    }, 
+    
+    showMessage: function(msg) {
+    	Ext.create('Ext.ux.Notification', {
+			position: 'tr',
+			useXAxis: true,
+			cls: 'ux-notification-light',
+			iconCls: 'ux-notification-icon-information',
+			closable: false,
+			title: '',
+			html: msg,
+			slideInDuration: 800,
+			slideBackDuration: 1500,
+			autoCloseDelay: 4000,
+			slideInAnimation: 'elasticIn',
+			slideBackAnimation: 'elasticIn'
+		}).show();
     }
     
 });

@@ -4,8 +4,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.tsingma.system.wechat.service.WxMiniCustomService;
+import com.tsingma.system.wechat.service.WxOpenCustomService;
+
+import cn.binarywang.wx.miniapp.config.WxMaConfig;
+import me.chanjar.weixin.open.api.WxOpenConfigStorage;
 
 public class BaseAction extends ActionSupport {
 
@@ -13,7 +19,12 @@ public class BaseAction extends ActionSupport {
 	
 	protected HttpServletResponse response = ServletActionContext.getResponse();
 	protected HttpServletRequest request = ServletActionContext.getRequest();
-
+	
+	@Autowired
+	private WxOpenCustomService wxOpenCustomService;
+	@Autowired
+	private WxMiniCustomService wxMiniCustomService;
+	
 	private Boolean success;
 	private String msg;
 
@@ -80,5 +91,13 @@ public class BaseAction extends ActionSupport {
 
 	public void setRequest(HttpServletRequest request) {
 		this.request = request;
+	}
+
+	public WxOpenConfigStorage getWxConfig() {
+		return wxOpenCustomService.getWxOpenConfigStorage();
+	}
+
+	public WxMaConfig getWxMaConfig() {
+		return wxMiniCustomService.getWxMaConfig();
 	}
 }

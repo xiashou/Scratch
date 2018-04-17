@@ -15,7 +15,6 @@ import com.oreilly.servlet.MultipartRequest;
 public class CosMultiPartRequest implements MultiPartRequest {
 	
 	private MultipartRequest multi;  
-    private String defaultEncoding;  
     private boolean maxSizeProvided;  
     private int maxSize;
 
@@ -30,6 +29,7 @@ public class CosMultiPartRequest implements MultiPartRequest {
 		return new String[] { multi.getContentType(fieldName) };  
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getErrors() {
 		return Collections.EMPTY_LIST;
@@ -45,6 +45,7 @@ public class CosMultiPartRequest implements MultiPartRequest {
 		return new String[] { multi.getFile(fieldName).getName() }; 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Enumeration<String> getFileParameterNames() {
 		return multi.getFileNames();
@@ -60,6 +61,7 @@ public class CosMultiPartRequest implements MultiPartRequest {
 		return multi.getParameter(name); 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Enumeration<String> getParameterNames() {
 		return multi.getParameterNames();  
@@ -72,10 +74,10 @@ public class CosMultiPartRequest implements MultiPartRequest {
 
 	@Override
 	public void parse(HttpServletRequest request, String saveDir) throws IOException {
-		if (maxSizeProvided) {  
-            multi = new MultipartRequest(request, saveDir, maxSize, defaultEncoding);  
+		if (maxSizeProvided) {
+            multi = new MultipartRequest(request, saveDir, maxSize, "UTF-8");  
         } else {  
-            multi = new MultipartRequest(request, saveDir, defaultEncoding);  
+            multi = new MultipartRequest(request, saveDir, "UTF-8");  
         }
 		
 	}

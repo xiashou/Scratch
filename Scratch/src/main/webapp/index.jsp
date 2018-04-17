@@ -6,8 +6,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>智能工匠 - Desktop Sample App</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>智能工匠 - Desktop Sample App</title>
 
     <link rel="stylesheet" type="text/css" href="<%=basePath %>/resources/css/desktop.css" />
     <link rel="stylesheet" type="text/css" href="<%=basePath %>/resources/css/icon.css" />
@@ -17,6 +17,7 @@
     <script type="text/javascript">
         Ext.Loader.setPath({
             'Ext.ux.desktop': '/mgr/frame',
+            'Ext.ux': '/dist/ext/ux',
             MyDesktop: '/mgr/ux',
             Business: '/mgr/biz'
         });

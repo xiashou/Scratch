@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <!-- 后台管理 -->
+    <package name="download" namespace="/" extends="tsm-struts">
+    	
+        <action name="download" class="DownloadAction">
+            <result name="success" type="stream">
+		        <param name="inputName">fileInput</param>  
+		        <param name="contentDispostion">attachment;filename="$(fileName)"</param>  
+		    </result>
+        </action>
+        
+    </package>
+    
+</struts>
