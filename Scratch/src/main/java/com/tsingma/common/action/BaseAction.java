@@ -30,7 +30,7 @@ public class BaseAction extends ActionSupport {
 
 	private Integer start;
 	private Integer limit;
-	private Integer totalCount;
+	private Long totalCount;
 	
 	public void setResult(Boolean success, String msg) {
 		this.setSuccess(success);
@@ -53,11 +53,11 @@ public class BaseAction extends ActionSupport {
 		this.msg = msg;
 	}
 
-	public Integer getTotalCount() {
+	public Long getTotalCount() {
 		return totalCount;
 	}
 
-	public void setTotalCount(Integer totalCount) {
+	public void setTotalCount(Long totalCount) {
 		this.totalCount = totalCount;
 	}
 

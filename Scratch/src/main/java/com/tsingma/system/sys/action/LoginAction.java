@@ -3,12 +3,12 @@ package com.tsingma.system.sys.action;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.tsingma.common.action.BaseAction;
-import com.tsingma.core.util.MD5;
 import com.tsingma.core.util.Utils;
 import com.tsingma.system.sys.model.SysUser;
 import com.tsingma.system.sys.service.SysUserService;
@@ -19,6 +19,7 @@ import com.tsingma.system.sys.service.SysUserService;
 public class LoginAction extends BaseAction {
 
 	private static final long serialVersionUID = 8855074463155483936L;
+	private static Logger log = Logger.getLogger("SLog");
 
 	@Autowired
 	private SysUserService sysUserService;
@@ -32,6 +33,19 @@ public class LoginAction extends BaseAction {
 	 */
 	public String login() throws Exception {
 		return SUCCESS;
+	}
+	
+	/**
+	 * 跳转到后台首页
+	 * @return
+	 * @throws Exception
+	 */
+	public String initIndex() throws Exception {
+		SysUser user = (SysUser) this.getRequest().getSession().getAttribute("SESSION_USER");
+		if(user == null)
+			return LOGIN;
+		else
+			return SUCCESS;
 	}
 	
 	/**
@@ -49,7 +63,7 @@ public class LoginAction extends BaseAction {
 				this.setResult(false, "该用户不存在！");
 				return SUCCESS;
 			}
-			if(!loginUser.getPassword().equals(MD5.crypt(sysUser.getPassword()))){
+			if(!loginUser.getPassword().equals(sysUser.getPassword())){
 				this.setResult(false, "密码错误！");
 				return SUCCESS;
 			}
@@ -57,10 +71,10 @@ public class LoginAction extends BaseAction {
 				this.setResult(false, "该用户已被锁定，请联系管理员！");
 				return SUCCESS;
 			}
-			if(Utils.isEmpty(loginUser.getRoleId())){
-				this.setResult(false, "该用户没有绑定任何角色！");
-				return SUCCESS;
-			}
+//			if(Utils.isEmpty(loginUser.getRoleId())){
+//				this.setResult(false, "该用户没有绑定任何角色！");
+//				return SUCCESS;
+//			}
 //			//获取用户角色信息， 放入session 
 //			SysRole sysRole = sysRoleService.getRoleById(loginUser.getRoleId());
 //			if(Utils.isEmpty(sysRole)){
@@ -89,8 +103,18 @@ public class LoginAction extends BaseAction {
 			
 			this.setResult(true, "");
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error(Utils.getErrorMessage(e));
 		}
+		return SUCCESS;
+	}
+	
+	/**
+	 * 注销
+	 * @return
+	 * @throws Exception
+	 */
+	public String logout() throws Exception {
+		this.getRequest().getSession().removeAttribute("SESSION_USER");
 		return SUCCESS;
 	}
 

@@ -8,9 +8,28 @@
     <!-- 商户 -->
     <package name="store" namespace="/biz/store" extends="tsm-struts">
         
+        <action name="queryListPage" class="StoreAction" method="queryListPage" >
+            <result type="json">
+            	<param name="ignoreHierarchy">false</param> 
+            	<param name="includeProperties">storeList.*, totalCount, success, msg</param>
+            </result>
+        </action>
+        
         <action name="queryListByAppid" class="StoreAction" method="queryListByAppid" >
         	<result type="json">
             	<param name="root">storeList</param>
+            </result>
+        </action>
+        
+        <action name="queryListByConfig" class="StoreAction" method="queryListByConfig" >
+        	<result type="json">
+            	<param name="root">storeList</param>
+            </result>
+        </action>
+        
+        <action name="queryById" class="StoreAction" method="queryById" >
+        	<result type="json">
+            	<param name="root">store</param>
             </result>
         </action>
         

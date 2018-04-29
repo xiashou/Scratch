@@ -291,12 +291,12 @@ Ext.define('Ext.ux.desktop.Desktop', {
 
     createWindow: function(config, cls) {
         var me = this, win, cfg = Ext.applyIf(config || {}, {
-                stateful: false,
-                isWindow: true,
-                constrainHeader: true,
-                minimizable: true,
-                maximizable: true
-            });
+            stateful: false,
+            isWindow: true,
+            constrainHeader: true,
+            minimizable: true,
+            maximizable: true
+        });
 
         cls = cls || Ext.window.Window;
         win = me.add(new cls(cfg));

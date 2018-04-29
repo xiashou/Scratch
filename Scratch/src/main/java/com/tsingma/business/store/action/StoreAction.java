@@ -29,16 +29,78 @@ public class StoreAction extends BaseAction {
 	
 	private List<Store> storeList;
 	private Store store;
+	private String tcode;
+	private Integer id;
 	
 	private File head;
 	private File image;
 	private String headFileName;
 	private String imageFileName;
 	
-	public String queryListByAppid() throws Exception {
+	/**
+	 * 分页查询商户
+	 * @return
+	 * @throws Exception
+	 */
+	public String queryListPage() {
+		try {
+			if (!Utils.isEmpty(super.getWxMaConfig())) {
+				if(Utils.isEmpty(store))
+					store = new Store();
+				store.setAppid(super.getWxMaConfig().getAppid());
+				this.setTotalCount(storeService.getListCount(store));
+	            storeList = storeService.getListPage(store, this.getStart(), this.getLimit());
+	        } 
+		} catch(Exception e) {
+			log.error(Utils.getErrorMessage(e));
+		}
+		return SUCCESS;
+	}
+	
+	/**
+	 * 查询可用商户
+	 * （后台端）
+	 * @return
+	 * @throws Exception
+	 */
+	public String queryListByConfig() {
 		try {
 			if (!Utils.isEmpty(super.getWxMaConfig())) {
 	            storeList = storeService.getListByAppid(super.getWxMaConfig().getAppid());
+	        }
+		} catch(Exception e) {
+			log.error(Utils.getErrorMessage(e));
+		}
+		return SUCCESS;
+	}
+	
+	/**
+	 * 查询可用商户
+	 * （小程序端）
+	 * @return
+	 * @throws Exception
+	 */
+	public String queryListByAppid() {
+		try {
+			if (!Utils.isEmpty(tcode)) {
+	            storeList = storeService.getListByAppid(tcode);
+	        } 
+		} catch(Exception e) {
+			log.error(Utils.getErrorMessage(e));
+		}
+		return SUCCESS;
+	}
+	
+	/**
+	 * 查询商户详细信息
+	 * （小程序端）
+	 * @return
+	 * @throws Exception
+	 */
+	public String queryById() {
+		try {
+			if (!Utils.isEmpty(id)) {
+				store = storeService.getById(id);
 	        } 
 		} catch(Exception e) {
 			log.error(Utils.getErrorMessage(e));
@@ -79,7 +141,7 @@ public class StoreAction extends BaseAction {
 		try {
 			if(!Utils.isEmpty(store) && !Utils.isEmpty(store.getId())){
 				Store exist = storeService.getById(store.getId());
-				exist.setAppid(super.getWxConfig().getComponentAppId());
+				exist.setAppid(super.getWxMaConfig().getAppid());
 				exist.setAddress(store.getAddress());
 				exist.setEnable(store.getEnable());
 				exist.setIntroduction(store.getIntroduction());
@@ -174,6 +236,18 @@ public class StoreAction extends BaseAction {
 	}
 	public void setImageFileName(String imageFileName) {
 		this.imageFileName = imageFileName;
+	}
+	public String getTcode() {
+		return tcode;
+	}
+	public void setTcode(String tcode) {
+		this.tcode = tcode;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 	

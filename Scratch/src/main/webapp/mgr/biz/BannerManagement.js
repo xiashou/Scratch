@@ -20,153 +20,193 @@ Ext.define('Business.BannerManagement', {
             iconCls:'banner'
         };
     },
+    
+    store: new Ext.data.Store({
+		pageSize : 20,
+		fields: ['id', 'appid', 'bannerUrl', 'linkUrl', 'sortNo'],
+		proxy : {
+			type : 'ajax',
+			url : '/biz/setting/queryBannerList.atc',
+			reader : {
+				root : 'bannerList'
+			}
+		}
+	}),
+	
+	f: new Ext.form.FormPanel({
+		layout : 'anchor',
+		defaults : {
+			anchor : '100%',
+			layout : 'hbox',
+			xtype : 'fieldcontainer'
+		},
+		bodyPadding : '5 10 0 0',
+		border : false,
+		items : [ {
+			defaults : {
+				flex : 1,
+				xtype : 'textfield',
+				labelWidth : 70,
+				labelAlign : 'right'
+			},
+			items : [ {
+				xtype : 'numberfield',
+				name : 'banner.sortNo',
+				fieldLabel : '排序',
+			},{
+				name : 'banner.id',
+				xtype: 'hiddenfield'
+			}]
+		},{
+			defaults : {
+				flex : 1,
+				xtype : 'filefield',
+				labelWidth : 70,
+				labelAlign : 'right'
+			},
+			items : [ {
+				fieldLabel : '图片',
+				name: 'upload',
+				buttonText: '浏览...',
+				anchor : '99%'
+			} ]
+		},{
+			defaults : {
+				flex : 1,
+				xtype : 'textfield',
+				labelWidth : 70,
+				labelAlign : 'right'
+			},
+			items : [ {
+				fieldLabel : '链接地址',
+				name: 'banner.linkUrl',
+				anchor : '99%'
+			} ]
+		},{
+			defaults : {
+				flex : 1,
+				xtype : 'displayfield',
+				labelWidth : 70
+			},
+			items: [ {
+				fieldLabel : '&nbsp;',
+				labelSeparator: '',
+				value:'图片最佳尺寸864*470'
+			} ]
+		} ]
+	}),
+	
+	buttons: function(me){
+		var desktop = me.app.getDesktop();
+		return [{
+			text : '保 存',
+			iconCls : 'accept',
+			handler : function() {
+				if (me.f.form.isValid()) {
+					me.f.form.submit({
+						waitTitle : '提示',
+						method : 'POST',
+						waitMsg : '正在处理数据,请稍候...',
+						success : function(form, action) {
+							subwin_bannermgr.hide();
+							desktop.showMessage(action.result.msg);
+							me.store.reload();
+						},
+						failure : function(form, action) {
+							var msg = action.result.msg;
+							Ext.MessageBox.alert('提示', msg);
+						}
+					});
+				}
+			}
+		}, {
+			text : '关 闭 ',
+			iconCls : 'stop',
+			handler : function() {
+				subwin_bannermgr.hide();
+			}
+		}];
+	},
+	
+	picRenderer: function(value, metaData, record) {
+		if(value){
+  			metaData.tdAttr = "data-qtip=\"<img src='/upload/banner/" + record.data.appid + '/' + value + "' style='width:320px; height:150px'/>\""; 
+  			return '<img src="/upload/banner/' + record.data.appid + '/' + value + '" style="height:30px" onerror="this.src=\'/resources/img/noImage.png\'" />';
+  		} else
+  			return '<img src="/resources/img/noImage.png" style="height:30px" />';
+    },
+    
+    selModel: Ext.create('Ext.selection.CheckboxModel', {
+		injectCheckbox : 1,
+		mode : 'SINGLE'
+	}),
+	
+	tbar: function(me) {
+		var desktop = me.app.getDesktop();
+		return [{
+            text:'新增',
+            iconCls:'add',
+            handler : function() {
+            	subwin_bannermgr.setTitle('新建Banner');
+            	me.f.getForm().reset();
+            	me.f.getForm().url = '/biz/setting/insertBanner.atc';
+            	subwin_bannermgr.show();
+			}
+        }, {
+            text:'删除',
+            iconCls:'delete',
+            handler: function(){
+            	var record = me.selModel.getSelection()[0];
+        		if (Ext.isEmpty(record)) {
+        			Ext.MessageBox.show({
+        				title : '提示',
+        				msg : '你没有选中任何项目！',
+        				buttons : Ext.MessageBox.OK,
+        				icon : Ext.MessageBox.INFO
+        			});
+        			return;
+        		}
+        		Ext.Msg.confirm('请确认', '确定要删除这项吗?', function(btn, text) {
+        			if (btn == 'yes') {
+        				Ext.Ajax.request({
+        					url : '/biz/setting/deleteBanner.atc',
+        					params : {
+        						'banner.id' : record.data.id
+        					},
+        					success : function(resp, opts) {
+        						var result = Ext.decode(resp.responseText);
+        						if (result.success) {
+        							desktop.showMessage(result.msg);
+        							me.selModel.deselectAll();
+        							me.store.reload();
+        						} else
+        							Ext.MessageBox.show({
+        								title : '提示',
+        								msg : result.msg,
+        								buttons : Ext.MessageBox.OK,
+        								icon : Ext.MessageBox.ERROR
+        							});
+        					},
+        					failure : function(resp, opts) {
+        						var result = Ext.decode(resp.responseText);
+        						Ext.MessageBox.show({
+        							title : '提示',
+        							msg : result.msg,
+        							buttons : Ext.MessageBox.OK,
+        							icon : Ext.MessageBox.ERROR
+        						});
+        					}
+        				});
+        			}
+        		});
+            }
+        }]
+	},
 
     createWindow : function(){
+    	var me = this;
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('banner-mgr');
-        var store = new Ext.data.Store({
-    		pageSize : 20,
-    		fields: ['id', 'appid', 'bannerUrl', 'linkUrl', 'sortNo'],
-    		proxy : {
-    			type : 'ajax',
-    			url : '/biz/setting/queryBannerList.atc',
-    			reader : {
-    				root : 'bannerList'
-    			}
-    		}
-    	});
-//        var pagesizeCombo = desktop.getPagesizeCombo();
-//    	var number = parseInt(pagesizeCombo.getValue());
-//    	pagesizeCombo.on("select", function(comboBox) {
-//    		bbar.pageSize = parseInt(comboBox.getValue());
-//    		number = parseInt(comboBox.getValue());
-//    		store.pageSize = parseInt(comboBox.getValue());
-//    		store.reload({
-//    			params : {
-//    				start : 0,
-//    				limit : bbar.pageSize
-//    			}
-//    		});
-//    	});
-//    	
-//    	var bbar = new Ext.PagingToolbar({
-//    		pageSize : number,
-//    		store : store,
-//    		displayInfo : true,
-//    		displayMsg : '显示{0}条到{1}条,共{2}条',
-//    		emptyMsg : "没有符合条件的记录",
-//    		items : [ '-', '&nbsp;&nbsp;', pagesizeCombo ]
-//    	});
-    	
-    	var bannerForm = new Ext.form.FormPanel({
-    		id : 'bannerForm',
-    		layout : 'anchor',
-    		defaults : {
-    			anchor : '100%',
-    			layout : 'hbox',
-    			xtype : 'fieldcontainer'
-    		},
-    		bodyPadding : '5 10 0 0',
-    		border : false,
-    		items : [ {
-    			defaults : {
-    				flex : 1,
-    				xtype : 'textfield',
-    				labelWidth : 70,
-    				labelAlign : 'right'
-    			},
-    			items : [ {
-    				id : 'sortNo',
-    				xtype : 'numberfield',
-    				name : 'banner.sortNo',
-    				fieldLabel : '排序',
-    			},{
-    				id : 'id',
-    				name : 'banner.id',
-    				xtype: 'hiddenfield'
-    			}]
-    		},{
-    			defaults : {
-    				flex : 1,
-    				xtype : 'filefield',
-    				labelWidth : 70,
-    				labelAlign : 'right'
-    			},
-    			items : [ {
-    				fieldLabel : '图片',
-    				id : 'upload',
-    				name: 'upload',
-    				buttonText: '浏览...',
-    				anchor : '99%'
-    			} ]
-    		},{
-    			defaults : {
-    				flex : 1,
-    				xtype : 'textfield',
-    				labelWidth : 70,
-    				labelAlign : 'right'
-    			},
-    			items : [ {
-    				fieldLabel : '链接地址',
-    				id : 'linkUrl',
-    				name: 'banner.linkUrl',
-    				anchor : '99%'
-    			} ]
-    		},{
-    			defaults : {
-    				flex : 1,
-    				xtype : 'displayfield',
-    				labelWidth : 70
-    			},
-    			items: [ {
-    				fieldLabel : '&nbsp;',
-    				labelSeparator: '',
-    				value:'图片最佳尺寸864*470'
-    			} ]
-    		} ],
-    		buttons : [ {
-    			text : '保 存',
-    			iconCls : 'accept',
-    			handler : function() {
-    				if (bannerForm.form.isValid()) {
-    					bannerForm.form.submit({
-    						waitTitle : '提示',
-    						method : 'POST',
-    						waitMsg : '正在处理数据,请稍候...',
-    						success : function(form, action) {
-    							bannerWindow.hide();
-    							console.log(action.result.msg);
-    							desktop.showMessage(action.result.msg);
-    							store.reload();
-    						},
-    						failure : function(form, action) {
-    							var msg = action.result.msg;
-    							Ext.MessageBox.alert('提示', msg);
-    						}
-    					});
-    				}
-    			}
-    		}, {
-    			text : '关 闭 ',
-    			iconCls : 'stop',
-    			handler : function() {
-    				bannerWindow.hide();
-    			}
-    		} ]
-    	});
-    	
-    	var picRenderer = function(value, metaData, record) {
-    		if(value){
-      			metaData.tdAttr = "data-qtip=\"<img src='/upload/banner/" + record.data.appid + '/' + value + "' style='width:320px; height:150px'/>\""; 
-      			return '<img src="/upload/banner/' + record.data.appid + '/' + value + '" style="height:30px" onerror="this.src=\'/resources/img/noImage.png\'" />';
-      		} else
-      			return '<img src="/resources/img/noImage.png" style="height:30px" />';
-        };
-        
-        var selModel = Ext.create('Ext.selection.CheckboxModel', {
-    		injectCheckbox : 1,
-    		mode : 'SINGLE'
-    	});
     	
         if(!win){
             win = desktop.createWindow({
@@ -181,8 +221,8 @@ Ext.define('Business.BannerManagement', {
                 items: [{
                 		border: false,
                         xtype: 'grid',
-                        store: store,
-                        selModel: selModel,
+                        store: me.store,
+                        selModel: me.selModel,
                         stripeRows : true,
                         frame : false,
                         viewConfig : {enableTextSelection : true},
@@ -197,7 +237,7 @@ Ext.define('Business.BannerManagement', {
 	                        	text : '图片',
 	                        	dataIndex : 'bannerUrl',
 	                    		width : '27%',
-	                    		renderer: picRenderer
+	                    		renderer: me.picRenderer
 	                        },{
 	                        	text : '链接地址',
 	                    		dataIndex : 'linkUrl',
@@ -207,83 +247,19 @@ Ext.define('Business.BannerManagement', {
 	                        	dataIndex : 'sortNo',
 	                        	width : '10%'
 	                        }]
-	                    }, bannerWindow = Ext.create('Ext.Window', {
-	                        title: '新增',
+	                    }, subwin_bannermgr = Ext.create('Ext.Window', {
 	                        width: 400,
 	                        height: 220,
 	                        constrain: true,
 	                        layout: 'fit',
-	                        items: [bannerForm]
+	                        items: [me.f],
+	                        buttons: me.buttons(me)
 	                    })
                 ],
-                tbar:[{
-                    text:'新增',
-                    iconCls:'add',
-                    handler : function() {
-                    	bannerWindow.setTitle('新建Banner');
-                    	bannerForm.getForm().reset();
-                    	bannerForm.getForm().url = '/biz/setting/insertBanner.atc';
-                    	bannerWindow.show();
-        			}
-//                }, {
-//                    text:'修改',
-//                    iconCls:'pencil',
-//                    handler : function() {
-//                    	Ext.example.msg('asdf','asdffff');
-//        			}
-                }, {
-                    text:'删除',
-                    iconCls:'delete',
-                    handler: function(){
-                    	var record = selModel.getSelection()[0];
-                		if (Ext.isEmpty(record)) {
-                			Ext.MessageBox.show({
-                				title : '提示',
-                				msg : '你没有选中任何项目！',
-                				buttons : Ext.MessageBox.OK,
-                				icon : Ext.MessageBox.INFO
-                			});
-                			return;
-                		}
-                		Ext.Msg.confirm('请确认', '确定要删除这项吗?', function(btn, text) {
-                			if (btn == 'yes') {
-                				Ext.Ajax.request({
-                					url : '/biz/setting/deleteBanner.atc',
-                					params : {
-                						'banner.id' : record.data.id
-                					},
-                					success : function(resp, opts) {
-                						var result = Ext.decode(resp.responseText);
-                						if (result.success) {
-                							desktop.showMessage(result.msg);
-                							selModel.deselectAll();
-                							store.reload();
-                						} else
-                							Ext.MessageBox.show({
-                								title : '提示',
-                								msg : result.msg,
-                								buttons : Ext.MessageBox.OK,
-                								icon : Ext.MessageBox.ERROR
-                							});
-                					},
-                					failure : function(resp, opts) {
-                						var result = Ext.decode(resp.responseText);
-                						Ext.MessageBox.show({
-                							title : '提示',
-                							msg : result.msg,
-                							buttons : Ext.MessageBox.OK,
-                							icon : Ext.MessageBox.ERROR
-                						});
-                					}
-                				});
-                			}
-                		});
-                    }
-                }],
-//                bbar:bbar,
+                tbar:me.tbar(me),
                 listeners: {
                     show: function() {
-                    	store.load();
+                    	me.store.load();
                     }
                 }
             });

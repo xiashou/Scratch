@@ -20,28 +20,281 @@ Ext.define('Business.StoreManagement', {
             iconCls:'store'
         };
     },
+    
+    store: new Ext.data.Store({
+		pageSize : 20,
+		fields: ['id', 'appid', 'name', 'address', 'phone', 'introduction', 'headUrl', 'imageUrl', 'locationx', 'locationy', 'enable', 'createdTime'],
+		proxy : {
+			type : 'ajax',
+			url : '/biz/store/queryListPage.atc',
+			reader : {
+				root : 'storeList',
+				totalProperty: 'totalCount'
+			}
+		}
+	}),
+	
+	f: new Ext.form.FormPanel({
+		layout : 'anchor',
+		defaults : {
+			anchor : '100%',
+			layout : 'hbox',
+			xtype : 'fieldcontainer'
+		},
+		bodyPadding : '5 10 0 0',
+		border : false,
+		items : [ {
+			defaults : {flex : 1,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
+			items : [ {
+				name : 'store.name',
+				fieldLabel : '商户名称',
+			},{
+				name : 'store.phone',
+				fieldLabel : '联系电话',
+			},{
+				name : 'store.id',
+				xtype: 'hiddenfield'
+			}]
+		},{
+			defaults : {flex : 1,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
+			items : [{
+				name: 'store.address',
+				fieldLabel : '地址'
+			}]
+		},{
+			defaults : {flex : 8,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
+			items: [ {
+				name: 'store.locationx',
+				fieldLabel : '地址x坐标',
+				readOnly:true, 
+				fieldStyle:'background-color: #F0F0F0;'
+			},{
+				name: 'store.locationy',
+				fieldLabel : '地址y坐标',
+				readOnly:true, 
+				fieldStyle:'background-color: #F0F0F0;'
+			},{
+				xtype: 'button',
+				flex : 3,
+				margin: '0 0 0 5',
+				text: '选取地址',
+				handler: function() {
+					mapwin_storemgr.update('<iframe src="/mgr/ux/map/map.jsp" width="100%" height="100%" frameborder="0"></iframe>');
+					mapwin_storemgr.show();
+			    }
+			}]
+		},{
+			defaults : {flex : 1,xtype : 'textarea',labelWidth : 70,labelAlign : 'right'},
+			items : [ {
+				fieldLabel : '商户简介',
+				name: 'store.introduction',
+				rows: 3
+			} ]
+		},{
+			defaults : {flex : 3,xtype : 'filefield',labelWidth : 70,labelAlign : 'right'},
+			items : [ {
+				fieldLabel : '小图',
+				name: 'head',
+				buttonText: '浏览...',
+				anchor : '99%'
+			},{
+				xtype : 'displayfield',
+				flex : 1,
+				labelWidth : 5,
+				fieldLabel : '&nbsp;',
+				labelSeparator: '',
+				value:'最佳尺寸180*180'
+			} ]
+		},{
+			defaults : {flex : 3,xtype : 'filefield',labelWidth : 70,labelAlign : 'right'},
+			items : [ {
+				fieldLabel : '大图',
+				name: 'image',
+				buttonText: '浏览...',
+				anchor : '99%'
+			},{
+				xtype : 'displayfield',
+				flex : 1,
+				labelWidth : 5,
+				fieldLabel : '&nbsp;',
+				labelSeparator: '',
+				value:'最佳尺寸750*408'
+			} ]
+		},{
+			defaults : {flex : 1,xtype : 'radiogroup',labelWidth : 70,labelAlign : 'right'},
+			items: [{
+				fieldLabel: '是否启用', 
+				defaults: {name: 'store.enable'},
+	        	items: [{inputValue: true, boxLabel: '启用', checked: true}, {inputValue: false,boxLabel: '关闭'}]
+			},{
+				xtype : 'displayfield',
+				flex : 1,
+				fieldLabel : '&nbsp;',
+				labelSeparator: '',
+				value:''
+			}]
+		} ]
+	}),
+	
+	buttons: function(me) {
+		var desktop = me.app.getDesktop();
+		return [{
+			text : '保 存',
+			iconCls : 'accept',
+			handler : function() {
+				if (me.f.form.isValid()) {
+					me.f.form.submit({
+						waitTitle : '提示',
+						method : 'POST',
+						waitMsg : '正在处理数据,请稍候...',
+						success : function(form, action) {
+							subwin_storemgr.hide();
+							desktop.showMessage(action.result.msg);
+							me.store.reload();
+						},
+						failure : function(form, action) {
+							var msg = action.result.msg;
+							Ext.MessageBox.alert('提示', msg);
+						}
+					});
+				}
+			}
+		}, {
+			text : '关 闭 ',
+			iconCls : 'stop',
+			handler : function() {
+				mapwin_storemgr.hide();
+				subwin_storemgr.hide();
+			}
+		}];
+	},
+	
+	smallRenderer: function(value, metaData, record) {
+		if(value){
+  			metaData.tdAttr = "data-qtip=\"<img src='/upload/store/" + record.data.appid + '/' + value + "' style='width:90px; height:90px'/>\""; 
+  			return '<img src="/upload/store/' + record.data.appid + '/' + value + '" style="height:20px" onerror="this.src=\'/resources/img/noImage.png\'" />';
+  		} else
+  			return '<img src="/resources/img/noImage.png" style="height:20px" />';
+    },
+    
+    largeRenderer: function(value, metaData, record) {
+		if(value){
+  			metaData.tdAttr = "data-qtip=\"<img src='/upload/store/" + record.data.appid + '/' + value + "' style='width:375px; height:204px'/>\""; 
+  			return '<img src="/upload/store/' + record.data.appid + '/' + value + '" style="height:20px" onerror="this.src=\'/resources/img/noImage.png\'" />';
+  		} else
+  			return '<img src="/resources/img/noImage.png" style="height:20px" />';
+    },
+  	
+  	selModel: Ext.create('Ext.selection.CheckboxModel', {
+		injectCheckbox : 1,
+		mode : 'SINGLE'
+	}),
+	
+	tbar: function(me) {
+		var desktop = me.app.getDesktop();
+		return [{
+            text:'新增',
+            iconCls:'add',
+            handler : function() {
+            	subwin_storemgr.setTitle('新建商户');
+            	me.f.getForm().reset();
+            	me.f.getForm().url = '/biz/store/insertStore.atc';
+            	subwin_storemgr.show();
+			}
+        }, {
+            text:'修改',
+            iconCls:'pencil',
+            handler : function() {
+            	var record = me.selModel.getSelection()[0];
+        		if (Ext.isEmpty(record)) {
+        			Ext.MessageBox.show({
+        				title : '提示',
+        				msg : '你没有选中任何项目！',
+        				buttons : Ext.MessageBox.OK,
+        				icon : Ext.MessageBox.INFO
+        			});
+        			return;
+        		}
+        		subwin_storemgr.setTitle('修改商户');
+            	me.f.getForm().reset();
+            	me.f.getForm().url = '/biz/store/updateStore.atc';
+            	me.selModel.deselectAll();
+//            	me.f.loadRecord(record);
+            	me.f.getForm().setValues([
+            		{id:'store.id', value:record.data.id},
+					{id:'store.name', value:record.data.name},
+					{id:'store.address', value:record.data.address},
+					{id:'store.phone', value:record.data.phone},
+					{id:'store.introduction', value:record.data.introduction},
+					{id:'store.locationx', value:record.data.locationx},
+					{id:'store.locationy', value:record.data.locationy},
+					{id:'store.enable', value:record.data.enable}
+				]);
+        		subwin_storemgr.show();
+			}
+        }, {
+            text:'删除',
+            iconCls:'delete',
+            handler: function(){
+            	var record = me.selModel.getSelection()[0];
+        		if (Ext.isEmpty(record)) {
+        			Ext.MessageBox.show({
+        				title : '提示',
+        				msg : '你没有选中任何项目！',
+        				buttons : Ext.MessageBox.OK,
+        				icon : Ext.MessageBox.INFO
+        			});
+        			return;
+        		}
+        		Ext.Msg.confirm('请确认', '确定要删除这项吗?', function(btn, text) {
+        			if (btn == 'yes') {
+        				Ext.Ajax.request({
+        					url : '/biz/store/deleteStore.atc',
+        					params : {
+        						'store.id' : record.data.id
+        					},
+        					success : function(resp, opts) {
+        						var result = Ext.decode(resp.responseText);
+        						if (result.success) {
+        							desktop.showMessage(result.msg);
+        							me.selModel.deselectAll();
+        							me.store.reload();
+        						} else
+        							Ext.MessageBox.show({
+        								title : '提示',
+        								msg : result.msg,
+        								buttons : Ext.MessageBox.OK,
+        								icon : Ext.MessageBox.ERROR
+        							});
+        					},
+        					failure : function(resp, opts) {
+        						var result = Ext.decode(resp.responseText);
+        						Ext.MessageBox.show({
+        							title : '提示',
+        							msg : result.msg,
+        							buttons : Ext.MessageBox.OK,
+        							icon : Ext.MessageBox.ERROR
+        						});
+        					}
+        				});
+        			}
+        		});
+            }
+        }];
+	},
 
     createWindow : function(){
-        var desktop = this.app.getDesktop();
+    	var me = this;
+        var desktop = me.app.getDesktop();
         var win = desktop.getWindow('store-mgr');
-        var store = new Ext.data.Store({
-    		pageSize : 500,
-    		fields: ['id', 'appid', 'name', 'address', 'phone', 'introduction', 'headUrl', 'imageUrl', 'locationx', 'locationy', 'enable', 'createdTime'],
-    		proxy : {
-    			type : 'ajax',
-    			url : '/biz/store/queryListByAppid.atc',
-    			reader : {
-    				root : 'storeList'
-    			}
-    		}
-    	});
+        
         var pagesizeCombo = desktop.getPagesizeCombo();
         var number = parseInt(pagesizeCombo.getValue());
 	  	pagesizeCombo.on("select", function(comboBox) {
 	  		bbar.pageSize = parseInt(comboBox.getValue());
 	  		number = parseInt(comboBox.getValue());
-	  		store.pageSize = parseInt(comboBox.getValue());
-	  		store.reload({
+	  		me.store.pageSize = parseInt(comboBox.getValue());
+	  		me.store.reload({
 	  			params : {
 	  				start : 0,
 	  				limit : bbar.pageSize
@@ -51,175 +304,12 @@ Ext.define('Business.StoreManagement', {
 	  	
 	  	var bbar = new Ext.PagingToolbar({
 	  		pageSize : number,
-	  		store : store,
+	  		store : me.store,
 	  		displayInfo : true,
 	  		displayMsg : '显示{0}条到{1}条,共{2}条',
 	  		emptyMsg : "没有符合条件的记录",
 	  		items : [ '-', '&nbsp;&nbsp;', pagesizeCombo ]
 	  	});
-	  	
-	  	var f = new Ext.form.FormPanel({
-    		id : 'f',
-    		layout : 'anchor',
-    		defaults : {
-    			anchor : '100%',
-    			layout : 'hbox',
-    			xtype : 'fieldcontainer'
-    		},
-    		bodyPadding : '5 10 0 0',
-    		border : false,
-    		items : [ {
-    			defaults : {flex : 1,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
-    			items : [ {
-    				id : 'name',
-    				name : 'store.name',
-    				fieldLabel : '商户名称',
-    			},{
-    				id : 'phone',
-    				name : 'store.phone',
-    				fieldLabel : '联系电话',
-    			},{
-    				id : 'id',
-    				name : 'store.id',
-    				xtype: 'hiddenfield'
-    			}]
-    		},{
-    			defaults : {flex : 1,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
-    			items : [{
-    				id : 'address',
-    				name: 'store.address',
-    				fieldLabel : '地址'
-    			}]
-    		},{
-    			defaults : {flex : 8,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
-    			items: [ {
-    				id : 'locationx',
-    				name: 'store.locationx',
-    				fieldLabel : '地址x坐标',
-    				readOnly:true, 
-    				fieldStyle:'background-color: #F0F0F0;'
-    			},{
-    				id : 'locationy',
-    				name: 'store.locationy',
-    				fieldLabel : '地址y坐标',
-    				readOnly:true, 
-    				fieldStyle:'background-color: #F0F0F0;'
-    			},{
-    				xtype: 'button',
-    				flex : 3,
-    				margin: '0 0 0 5',
-    				text: '选取地址',
-    				handler: function() {
-    					mw.update('<iframe src="/mgr/ux/map/map.jsp" width="100%" height="100%" frameborder="0"></iframe>');
-                    	mw.show();
-    			    }
-    			}]
-    		},{
-    			defaults : {flex : 1,xtype : 'textarea',labelWidth : 70,labelAlign : 'right'},
-    			items : [ {
-    				fieldLabel : '商户简介',
-    				id : 'introduction',
-    				name: 'store.introduction',
-    				rows: 3
-    			} ]
-    		},{
-    			defaults : {flex : 3,xtype : 'filefield',labelWidth : 70,labelAlign : 'right'},
-    			items : [ {
-    				fieldLabel : '小图',
-    				id : 'head',
-    				name: 'head',
-					buttonText: '浏览...',
-    				anchor : '99%'
-    			},{
-    				xtype : 'displayfield',
-    				flex : 1,
-					labelWidth : 5,
-    				fieldLabel : '&nbsp;',
-    				labelSeparator: '',
-    				value:'最佳尺寸180*180'
-    			} ]
-    		},{
-    			defaults : {flex : 3,xtype : 'filefield',labelWidth : 70,labelAlign : 'right'},
-    			items : [ {
-    				fieldLabel : '大图',
-    				id : 'image',
-    				name: 'image',
-    				buttonText: '浏览...',
-    				anchor : '99%'
-    			},{
-    				xtype : 'displayfield',
-    				flex : 1,
-    				labelWidth : 5,
-    				fieldLabel : '&nbsp;',
-    				labelSeparator: '',
-    				value:'最佳尺寸750*408'
-    			} ]
-    		},{
-    			defaults : {flex : 1,xtype : 'radiogroup',labelWidth : 70,labelAlign : 'right'},
-    			items: [{
-    				id:'enable', 
-    				fieldLabel: '是否可用', 
-    				defaults: {name: 'store.enable'},
-		        	items: [{inputValue: true, boxLabel: '正常', checked: true}, {inputValue: false,boxLabel: '锁定'}]
-    			},{
-    				xtype : 'displayfield',
-    				flex : 1,
-    				fieldLabel : '&nbsp;',
-    				labelSeparator: '',
-    				value:''
-    			}]
-    		} ],
-    		buttons : [ {
-    			text : '保 存',
-    			iconCls : 'accept',
-    			handler : function() {
-    				if (f.form.isValid()) {
-    					f.form.submit({
-    						waitTitle : '提示',
-    						method : 'POST',
-    						waitMsg : '正在处理数据,请稍候...',
-    						success : function(form, action) {
-    							w.hide();
-    							desktop.showMessage(action.result.msg);
-    							store.reload();
-    						},
-    						failure : function(form, action) {
-    							var msg = action.result.msg;
-    							Ext.MessageBox.alert('提示', msg);
-    						}
-    					});
-    				}
-    			}
-    		}, {
-    			text : '关 闭 ',
-    			iconCls : 'stop',
-    			handler : function() {
-    				mw.hide();
-    				w.hide();
-    			}
-    		} ]
-    	});
-	  	
-	  	var smallRenderer = function(value, metaData, record) {
-    		if(value){
-      			metaData.tdAttr = "data-qtip=\"<img src='/upload/store/" + record.data.appid + '/' + value + "' style='width:90px; height:90px'/>\""; 
-      			return '<img src="/upload/store/' + record.data.appid + '/' + value + '" style="height:20px" onerror="this.src=\'/resources/img/noImage.png\'" />';
-      		} else
-      			return '<img src="/resources/img/noImage.png" style="height:20px" />';
-        };
-        
-        var largeRenderer = function(value, metaData, record) {
-    		if(value){
-      			metaData.tdAttr = "data-qtip=\"<img src='/upload/store/" + record.data.appid + '/' + value + "' style='width:375px; height:204px'/>\""; 
-      			return '<img src="/upload/store/' + record.data.appid + '/' + value + '" style="height:20px" onerror="this.src=\'/resources/img/noImage.png\'" />';
-      		} else
-      			return '<img src="/resources/img/noImage.png" style="height:20px" />';
-        };
-	  	
-	  	var selModel = Ext.create('Ext.selection.CheckboxModel', {
-    		injectCheckbox : 1,
-    		mode : 'SINGLE'
-    	});
 	  	
         if(!win){
             win = desktop.createWindow({
@@ -234,10 +324,11 @@ Ext.define('Business.StoreManagement', {
                 items: [{
                 	border: false,
                     xtype: 'grid',
-                    store: store,
-                    selModel: selModel,
+                    store: me.store,
+                    selModel: me.selModel,
                     stripeRows : true,
                     frame : false,
+                    forceFit: true,
                     viewConfig : {enableTextSelection : true},
             		loadMask : {msg : '正在加载表格数据,请稍等...'},
             		columns: [new Ext.grid.RowNumberer({
@@ -262,12 +353,12 @@ Ext.define('Business.StoreManagement', {
 	                    	text : '小图',
 	                    	dataIndex : 'headUrl',
 	                    	width : '8%',
-	                    	renderer: smallRenderer
+	                    	renderer: me.smallRenderer
 	                    },{
 	                    	text : '大图',
 	                    	dataIndex : 'imageUrl',
 	                    	width : '8%',
-	                    	renderer: largeRenderer
+	                    	renderer: me.largeRenderer
 	                    },{
 	                    	text : '是否可用',
 	                    	dataIndex : 'enable',
@@ -280,13 +371,14 @@ Ext.define('Business.StoreManagement', {
 	                    	dataIndex : 'createdTime',
 	                    	width : '16%'
 	                    }]
-                    }, w = Ext.create('Ext.Window', {
+                    }, subwin_storemgr = Ext.create('Ext.Window', {
                         width: 520,
                         height: 350,
                         constrain: true,
                         layout: 'fit',
-                        items: [f]
-                    }), mw = Ext.create('Ext.Window', {
+                        items: [me.f],
+                        buttons: me.buttons(me)
+                    }), mapwin_storemgr = Ext.create('Ext.Window', {
                     	width: 635,
                         height: 610,
                         title:'选取地址',
@@ -295,90 +387,11 @@ Ext.define('Business.StoreManagement', {
                         layout: 'fit'
                     })
                 ],
-                tbar:[{
-                    text:'新增',
-                    iconCls:'add',
-                    handler : function() {
-                    	w.setTitle('新建商户');
-                    	f.getForm().reset();
-                    	f.getForm().url = '/biz/store/insertStore.atc';
-                    	w.show();
-        			}
-                }, {
-                    text:'修改',
-                    iconCls:'pencil',
-                    handler : function() {
-                    	var record = selModel.getSelection()[0];
-                		if (Ext.isEmpty(record)) {
-                			Ext.MessageBox.show({
-                				title : '提示',
-                				msg : '你没有选中任何项目！',
-                				buttons : Ext.MessageBox.OK,
-                				icon : Ext.MessageBox.INFO
-                			});
-                			return;
-                		}
-                    	w.setTitle('修改商户');
-                    	f.getForm().reset();
-                    	f.getForm().url = '/biz/store/updateStore.atc';
-                    	selModel.deselectAll();
-                		f.loadRecord(record);
-                		Ext.getCmp('enable').setValue({'store.enable' : record.data.enable});
-                    	w.show();
-        			}
-                }, {
-                    text:'删除',
-                    iconCls:'delete',
-                    handler: function(){
-                    	var record = selModel.getSelection()[0];
-                		if (Ext.isEmpty(record)) {
-                			Ext.MessageBox.show({
-                				title : '提示',
-                				msg : '你没有选中任何项目！',
-                				buttons : Ext.MessageBox.OK,
-                				icon : Ext.MessageBox.INFO
-                			});
-                			return;
-                		}
-                		Ext.Msg.confirm('请确认', '确定要删除这项吗?', function(btn, text) {
-                			if (btn == 'yes') {
-                				Ext.Ajax.request({
-                					url : '/biz/store/deleteStore.atc',
-                					params : {
-                						'store.id' : record.data.id
-                					},
-                					success : function(resp, opts) {
-                						var result = Ext.decode(resp.responseText);
-                						if (result.success) {
-                							desktop.showMessage(result.msg);
-                							selModel.deselectAll();
-                							store.reload();
-                						} else
-                							Ext.MessageBox.show({
-                								title : '提示',
-                								msg : result.msg,
-                								buttons : Ext.MessageBox.OK,
-                								icon : Ext.MessageBox.ERROR
-                							});
-                					},
-                					failure : function(resp, opts) {
-                						var result = Ext.decode(resp.responseText);
-                						Ext.MessageBox.show({
-                							title : '提示',
-                							msg : result.msg,
-                							buttons : Ext.MessageBox.OK,
-                							icon : Ext.MessageBox.ERROR
-                						});
-                					}
-                				});
-                			}
-                		});
-                    }
-                }],
+                tbar:me.tbar(me),
                 bbar:bbar,
                 listeners: {
                     show: function() {
-                    	store.load();
+                    	me.store.load();
                     }
                 }
             });

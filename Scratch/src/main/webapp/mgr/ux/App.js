@@ -24,11 +24,15 @@ Ext.define('MyDesktop.App', {
 //        'MyDesktop.DeptReport',
 //        'MyDesktop.Blockalanche',
         
+        'System.AccountManagement',			//系统用户管理
+        
         'Business.StoreManagement',			//门店管理
-//        'MyDesktop.CouponManagement',		//优惠券管理
-//        'MyDesktop.ScratchSetting',		//刮奖设置
+        'Business.CouponManagement',		//商家优惠券管理
+        'Business.ActCouponManagement',		//活动优惠券管理
+        'Business.ScratchSetting',			//刮奖设置
         'Business.MemberReport',			//会员报表
         'Business.BannerManagement',		//Banner管理
+        'Business.ActivityManagement',		//活动管理
 //        'MyDesktop.CouponReport',			//会员优惠券报表
 //        'MyDesktop.WinningManagement',	//中奖报表
         
@@ -44,46 +48,54 @@ Ext.define('MyDesktop.App', {
     },
 
     getModules : function(){
-        return [
-            new MyDesktop.VideoWindow(),
-            //new MyDesktop.Blockalanche(),
-            new MyDesktop.SystemStatus(),
-            new MyDesktop.GridWindow(),
-            new MyDesktop.TabWindow(),
-            new MyDesktop.AccordionWindow(),
-            new MyDesktop.Notepad(),
-            new MyDesktop.BogusMenuModule(),
-            new MyDesktop.BogusModule(),
-//            new MyDesktop.DeptReport(),
-            new Business.BannerManagement(),
-            new Business.StoreManagement(),
-            new Business.MemberReport()
-        ];
+    	if(BB == 0){
+    		return [
+    			new System.AccountManagement(),
+    			new Business.BannerManagement(),
+    			new Business.StoreManagement(),
+    			new Business.ActivityManagement(),
+    			new Business.ActCouponManagement(),
+    			new Business.ScratchSetting(),
+    			new Business.MemberReport()
+          ];
+    	} else {
+    		return [
+    			new Business.CouponManagement()
+    		];
+    	}
     },
 
     getDesktopConfig: function () {
-        var me = this, ret = me.callParent();
+        var me = this, ret = me.callParent(), store;
+        
+        if(BB == 0){
+        	store = Ext.create('Ext.data.Store', {
+                model: 'Ext.ux.desktop.ShortcutModel',
+                data: [
+                    { name: 'Banner图片管理', iconCls: 'banner-shortcut', module: 'banner-mgr'},
+                    { name: '商户管理', iconCls: 'store-shortcut', module: 'store-mgr'},
+                    { name: '活动管理', iconCls: 'activity-shortcut', module: 'activity-mgr'},
+                    { name: '会员报表', iconCls: 'member-shortcut', module: 'member-rpt'},
+                    { name: '优惠券管理', iconCls: 'coupon-shortcut', module: 'actcoupon-mgr'},
+                    { name: '刮奖设置', iconCls: 'setting-shortcut', module: 'scratch-set'},
+                    { name: '系统账户管理', iconCls: 'account-shortcut', module: 'account-mgr'}
+                ]
+            });
+        } else {
+        	store = Ext.create('Ext.data.Store', {
+                model: 'Ext.ux.desktop.ShortcutModel',
+                data: [
+                    { name: '优惠券管理', iconCls: 'coupon-shortcut', module: 'coupon-mgr'},
+                ]
+            });
+        }
 
         return Ext.apply(ret, {
             //cls: 'ux-desktop-black',
-
             contextMenuItems: [
                 { text: '更改设置', handler: me.onSettings, scope: me }
             ],
-
-            shortcuts: Ext.create('Ext.data.Store', {
-                model: 'Ext.ux.desktop.ShortcutModel',
-                data: [
-                    { name: 'Grid Window', iconCls: 'grid-shortcut', module: 'grid-win' },
-                    { name: 'Accordion Window', iconCls: 'accordion-shortcut', module: 'acc-win' },
-                    { name: 'Notepad', iconCls: 'notepad-shortcut', module: 'notepad' },
-                    { name: 'System Status', iconCls: 'cpu-shortcut', module: 'systemstatus'},
-                    { name: 'Banner图片管理', iconCls: 'banner-shortcut', module: 'banner-mgr'},
-                    { name: '商户管理', iconCls: 'store-shortcut', module: 'store-mgr'},
-                    { name: '会员报表', iconCls: 'member-shortcut', module: 'member-rpt'}
-                ]
-            }),
-
+            shortcuts: store,
             wallpaper: '/resources/img/wallpapers/Blue-Sencha.jpg',
             wallpaperStretch: false
         });
@@ -94,9 +106,9 @@ Ext.define('MyDesktop.App', {
         var me = this, ret = me.callParent();
 
         return Ext.apply(ret, {
-            title: 'Don Griffin',
+            title: CC,
             iconCls: 'user',
-            height: 300,
+            height: 400,
             toolConfig: {
                 width: 100,
                 items: [
@@ -133,7 +145,19 @@ Ext.define('MyDesktop.App', {
     },
 
     onLogout: function () {
-        Ext.Msg.confirm('注销', '确定退出系统吗?');
+        Ext.MessageBox.show({
+			title : '提示',
+			msg : '确定退出系统吗?',
+			width : 250,
+			buttons : Ext.MessageBox.YESNO,
+			animEl : Ext.getBody(),
+			icon : Ext.MessageBox.QUESTION,
+			fn : function(btn) {
+				if (btn == 'yes') {
+					window.location.href = '/logout.atc';
+				}
+			}
+		});
     },
 
     onSettings: function () {

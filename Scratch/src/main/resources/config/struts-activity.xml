@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <!-- 活动 -->
+    <package name="activity" namespace="/biz/activity" extends="tsm-struts">
+        
+        <action name="queryListByAppid" class="ActivityAction" method="queryListByAppid" >
+        	<result type="json">
+            	<param name="root">actList</param>
+            </result>
+        </action>
+        <action name="queryEnableActivity" class="ActivityAction" method="queryEnableActivity" >
+        	<result type="json">
+            	<param name="root">activity</param>
+            </result>
+        </action>
+        <action name="insertActivity" class="ActivityAction" method="insertActivity" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="updateActivity" class="ActivityAction" method="updateActivity" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="deleteActivity" class="ActivityAction" method="deleteActivity" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="createOrder" class="ActivityAction" method="createOrder" >
+        	<result type="json">
+            	<param name="root">result</param>
+            </result>
+        </action>
+        
+    </package>
+    
+</struts>

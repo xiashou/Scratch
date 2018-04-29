@@ -201,10 +201,10 @@ Ext.define('Business.MemberReport', {
     		} ]
     	});
 	  	
-	  	var smallRenderer = function(value, metaData, record) {
+	  	var headRenderer = function(value, metaData, record) {
     		if(value){
-      			metaData.tdAttr = "data-qtip=\"<img src='/upload/store/" + record.data.appid + '/' + value + "' style='width:90px; height:90px'/>\""; 
-      			return '<img src="/upload/store/' + record.data.appid + '/' + value + '" style="height:20px" onerror="this.src=\'/resources/img/noImage.png\'" />';
+      			metaData.tdAttr = "data-qtip=\"<img src='" + value + "' style='width:120px; height:120px'/>\""; 
+      			return '<img src="' + value + '" style="height:20px" onerror="this.src=\'/resources/img/noImage.png\'" />';
       		} else
       			return '<img src="/resources/img/noImage.png" style="height:20px" />';
         };
@@ -225,6 +225,7 @@ Ext.define('Business.MemberReport', {
                     store: store,
                     stripeRows : true,
                     frame : false,
+                    forceFit: true,
                     viewConfig : {enableTextSelection : true},
             		loadMask : {msg : '正在加载表格数据,请稍等...'},
             		columns: [new Ext.grid.RowNumberer({
@@ -236,7 +237,8 @@ Ext.define('Business.MemberReport', {
 	                    },{
 	                    	text : '头像',
 	                    	dataIndex : 'avatarUrl',
-	                		width : '10%'
+	                		width : '10%',
+	                		renderer: headRenderer
 	                    },{
 	                    	text : '昵称',
 	                    	dataIndex : 'nickName',

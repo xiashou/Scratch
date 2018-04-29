@@ -190,13 +190,13 @@ qq.maps.event.addListener(map, "mousemove", function (e) {
 var url3;
 qq.maps.event.addListener(map, "click", function (e) {
 	//console.log(parent.document.getElementById("locationx"));
-	parent.document.getElementById("locationx-inputEl").value = e.latLng.getLat().toFixed(6);
-	parent.document.getElementById("locationy-inputEl").value = e.latLng.getLng().toFixed(6);
+	parent.document.getElementsByName("store.locationx")[0].value = e.latLng.getLat().toFixed(6);
+	parent.document.getElementsByName("store.locationy")[0].value = e.latLng.getLng().toFixed(6);
     document.getElementById("poi_cur").value = e.latLng.getLat().toFixed(6) + "," + e.latLng.getLng().toFixed(6);
     url3 = encodeURI("http://apis.map.qq.com/ws/geocoder/v1/?location=" + e.latLng.getLat() + "," + e.latLng.getLng() + "&key=PQHBZ-3N4KJ-3RQFU-KCDXS-SGUE7-ECFYS&output=jsonp&&callback=?");
     $.getJSON(url3, function (result) {
         if(result.result!=undefined){
-        	parent.document.getElementById("address-inputEl").value = result.result.address;
+        	parent.document.getElementsByName("store.address")[0].value = result.result.address;
             document.getElementById("addr_cur").value = result.result.address;
         }else{
         	parent.document.getElementById("address-inputEl").value = "";
@@ -403,8 +403,8 @@ function setFlagClicked(arr, index) {
             ele.div.isClicked = true;
             var str = '<div style="width:250px;">' + ele.div.children[1].innerHTML.toString() + '</div>';
             var latLng = ele.getPosition();
-            parent.document.getElementById("locationx-inputEl").value = latLng.getLat().toFixed(6);
-        	parent.document.getElementById("locationy-inputEl").value = latLng.getLng().toFixed(6);
+            parent.document.getElementsByName("store.locationx")[0].value = latLng.getLat().toFixed(6);
+			parent.document.getElementsByName("store.locationy")[0].value = latLng.getLng().toFixed(6);
             document.getElementById("poi_cur").value = latLng.getLat().toFixed(6) + "," + latLng.getLng().toFixed(6);
         } else {
             ele.isClicked = false;

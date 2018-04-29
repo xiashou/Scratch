@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "b_store")
@@ -24,6 +25,9 @@ public class Store {
 	private String locationy;
 	private Boolean enable;
 	private String createdTime;
+	
+	@Transient
+	private Integer times;
 	
 	
 	public Integer getId() {
@@ -97,6 +101,12 @@ public class Store {
 	}
 	public void setEnable(Boolean enable) {
 		this.enable = enable;
+	}
+	public Integer getTimes() {
+		return times;
+	}
+	public void setTimes(Integer times) {
+		this.times = times;
 	}
 	
 }

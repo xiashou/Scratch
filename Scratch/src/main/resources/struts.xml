@@ -6,7 +6,7 @@
 <struts>
 
 	<!-- 开发模式下使用，这样可以打印出更详细的日志信息 -->
-	<constant name="struts.devMode" value="true" />
+	<constant name="struts.devMode" value="false" />
 	<!-- 指定Web应用的默认编码，相当于调用request的setCharacterEncoding方法 -->
 	<constant name="struts.i18n.encoding" value="UTF-8" />
 	<!-- 设置浏览器是否缓存静态内容，默认值为true(生产环境下使用)，开发阶段最好关闭 -->
@@ -43,10 +43,8 @@
     	<default-interceptor-ref name="authorityStack"></default-interceptor-ref>  
     	
 		<global-results>
-			<result name="error">/mgr/common/error/error.jsp</result>
-			<result name="404">/mgr/common/error/404.jsp</result>
-			<result name="timeout1">/mgr/common/error/timeout1.jsp</result>
-			<result name="timeout2">/mgr/common/error/timeout2.jsp</result>
+			<result name="error" type="redirectAction">ErrorAction</result>
+			<result name="404" type="redirectAction">ErrorAction</result>
 		</global-results>
 		
 		<global-exception-mappings>

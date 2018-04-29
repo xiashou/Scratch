@@ -15,8 +15,42 @@
             </result>
         </action>
         
-        <action name="index">
-            <result>/index.jsp</result>
+        <action name="index" class="loginAction" method="initIndex">
+            <result name="success">/index.jsp</result>
+            <result name="login">/login.jsp</result>
+        </action>
+        
+        <action name="logout" class="loginAction" method="logout">
+            <result name="success">/login.jsp</result>
+        </action>
+        
+    </package>
+    
+    <package name="sys" namespace="/sys/user" extends="tsm-struts">
+    	
+        <action name="queryListByStore" class="SysUserAction" method="queryListByStore" >
+            <result type="json">
+            	<param name="root">userList</param>
+            </result>
+        </action>
+        
+        <action name="insertSysUser" class="SysUserAction" method="insertSysUser" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="updateSysUser" class="SysUserAction" method="updateSysUser" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="deleteSysUser" class="SysUserAction" method="deleteSysUser" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
         </action>
         
     </package>

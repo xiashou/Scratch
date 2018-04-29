@@ -213,9 +213,12 @@ public class BaseDao<T, PK extends Serializable> {
 
 	}
 	
-	public List<T> listPage(CriteriaQuery<T> crq, int pageNo, int pageSize) {
-		return getSession().createQuery(crq).setFirstResult(pageNo).setMaxResults(pageSize).getResultList();
-
+	public List<T> listPage(CriteriaQuery<T> query, int pageNo, int pageSize) {
+		return getSession().createQuery(query).setFirstResult(pageNo).setMaxResults(pageSize).getResultList();
+	}
+	
+	public Long listCount(CriteriaQuery<Long> query) {
+		return getSession().createQuery(query).getSingleResult();
 	}
 	
 	

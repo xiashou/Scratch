@@ -1,6 +1,7 @@
 package com.tsingma.common.action;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.apache.log4j.Logger;
@@ -28,13 +29,15 @@ public class DownloadAction extends ActionSupport {
      */
     public String execute() {
     	try {
-    		if(!Utils.isEmpty(appid) && !Utils.isEmpty(fileName) && !Utils.isEmpty(path)){
-    			File file = new File("/upload/" + path + "/" + appid + "/" + fileName);
-    			if(file.exists()){
-    				fileInput = ServletActionContext.getServletContext().getResourceAsStream("/upload/" + path + "/" + appid + "/" + fileName); 
-    			} else
+    		if(!Utils.isEmpty(fileName) && !Utils.isEmpty(path)){
+    			File file = new File(ServletActionContext.getServletContext().getRealPath("/upload/" + path + (Utils.isEmpty(appid)?"":("/" + appid)) + "/" + fileName));
+//    			System.out.println(ServletActionContext.getServletContext().getRealPath("/upload/" + path + "/" + appid + "/" + fileName));
+    			if(file.exists())
+    				fileInput = new FileInputStream(file);
+    			else
     				log.error("file not found!");
-    		}
+    		} else
+    			fileInput = new FileInputStream(new File(ServletActionContext.getServletContext().getRealPath("/resources/img/noImage.png")));
     	} catch(Exception e){
     		log.error(Utils.getErrorMessage(e));
     	}

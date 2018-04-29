@@ -10,8 +10,10 @@
     	
         <action name="download" class="DownloadAction">
             <result name="success" type="stream">
-		        <param name="inputName">fileInput</param>  
+            	<param name="contentType">application/octet-stream;charset=UTF-8</param>
+		        <param name="inputName">fileInput</param>
 		        <param name="contentDispostion">attachment;filename="$(fileName)"</param>  
+		        <param name="bufferSize">4096</param>
 		    </result>
         </action>
         

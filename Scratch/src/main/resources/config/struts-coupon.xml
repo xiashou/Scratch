@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <!-- 优惠券 -->
+    <package name="coupon" namespace="/biz/coupon" extends="tsm-struts">
+        
+        <action name="queryListPage" class="CouponAction" method="queryListPage" >
+            <result type="json">
+            	<param name="ignoreHierarchy">false</param> 
+            	<param name="includeProperties">couponList.*, totalCount, success, msg</param>
+            </result>
+        </action>
+        <action name="insertCoupon" class="CouponAction" method="insertCoupon" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="updateCoupon" class="CouponAction" method="updateCoupon" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="deleteCoupon" class="CouponAction" method="deleteCoupon" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        
+    </package>
+    
+    <!-- 优惠券 -->
+    <package name="actCoupon" namespace="/biz/actCoupon" extends="tsm-struts">
+        
+        <action name="queryListPage" class="ActCouponAction" method="queryListPage" >
+            <result type="json">
+            	<param name="ignoreHierarchy">false</param> 
+            	<param name="includeProperties">actCouponList.*, totalCount, success, msg</param>
+            </result>
+        </action>
+        <action name="insertActCoupon" class="ActCouponAction" method="insertActCoupon" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="updateActCoupon" class="ActCouponAction" method="updateActCoupon" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="deleteActCoupon" class="ActCouponAction" method="deleteActCoupon" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        
+    </package>
+    
+</struts>

@@ -49,4 +49,11 @@
         
     </package>
     
+    <!-- 微信支付 -->
+    <package name="wechatPay" namespace="/pay" extends="tsm-struts">
+    	
+        <action name="wechatPayNotify" class="WechatPayAction" method="wechatPayNotify" />
+        
+    </package>
+    
 </struts>
