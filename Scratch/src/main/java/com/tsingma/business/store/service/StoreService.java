@@ -46,7 +46,7 @@ public class StoreService {
 		List<Store> list = storeDao.loadListByAppid(appid);
 		for(Store store : list){
 			//查询已消费次数
-			store.setTimes(1);
+			store.setTimes(0);
 		}
 		return list;
 	}

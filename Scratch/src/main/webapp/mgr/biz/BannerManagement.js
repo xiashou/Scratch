@@ -26,7 +26,7 @@ Ext.define('Business.BannerManagement', {
 		fields: ['id', 'appid', 'bannerUrl', 'linkUrl', 'sortNo'],
 		proxy : {
 			type : 'ajax',
-			url : '/biz/setting/queryBannerList.atc',
+			url : '/biz/banner/queryBannerList.atc',
 			reader : {
 				root : 'bannerList'
 			}
@@ -149,7 +149,7 @@ Ext.define('Business.BannerManagement', {
             handler : function() {
             	subwin_bannermgr.setTitle('新建Banner');
             	me.f.getForm().reset();
-            	me.f.getForm().url = '/biz/setting/insertBanner.atc';
+            	me.f.getForm().url = '/biz/banner/insertBanner.atc';
             	subwin_bannermgr.show();
 			}
         }, {
@@ -169,7 +169,7 @@ Ext.define('Business.BannerManagement', {
         		Ext.Msg.confirm('请确认', '确定要删除这项吗?', function(btn, text) {
         			if (btn == 'yes') {
         				Ext.Ajax.request({
-        					url : '/biz/setting/deleteBanner.atc',
+        					url : '/biz/banner/deleteBanner.atc',
         					params : {
         						'banner.id' : record.data.id
         					},
@@ -252,6 +252,7 @@ Ext.define('Business.BannerManagement', {
 	                        height: 220,
 	                        constrain: true,
 	                        layout: 'fit',
+	                        closeAction: 'hide',
 	                        items: [me.f],
 	                        buttons: me.buttons(me)
 	                    })

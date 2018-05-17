@@ -130,12 +130,9 @@ Ext.define('Business.ActCouponManagement', {
 		        	Ext.MessageBox.prompt('请输入需要添加的数量', '输入数量（不能超过'+record.data.number+'）:', function(btn, text){
 		        		if(btn=='ok'){
 		        			if(Ext.isNumeric(text)){
-		        				if(Number(text) <= record.data.number){
-//		        					['id', 'storeId', 'name', 'number', 'endDate', 'createdTime']
-//		        					['id', 'actId', 'couponId', 'number', 'endDate', 'createdTime']
-		        					console.log(record);
+		        				if(Number(text) <= record.data.number)
 		        					me.insertActCoupon(me, record.data.id, Number(text), record.data.endDate);
-		        				} else
+		        				else
 		        					Ext.MessageBox.alert('提示', '数量不能大于'+record.data.number+'！');
 		        			} else
 		        				Ext.MessageBox.alert('提示', '请输入数字!');
@@ -194,35 +191,6 @@ Ext.define('Business.ActCouponManagement', {
             	subwin_actcouponmgr.show();
 			}
         }, {
-            text:'修改',
-            iconCls:'pencil',
-            handler : function() {
-            	var record = me.selModel.getSelection()[0];
-        		if (Ext.isEmpty(record)) {
-        			Ext.MessageBox.show({
-        				title : '提示',
-        				msg : '你没有选中任何项目！',
-        				buttons : Ext.MessageBox.OK,
-        				icon : Ext.MessageBox.INFO
-        			});
-        			return;
-        		}
-        		subwin_actcouponmgr.setTitle('修改用户');
-            	me.f.getForm().reset();
-            	me.f.getForm().url = '/sys/user/updateSysUser.atc';
-            	me.selModel.deselectAll();
-            	me.f.getForm().setValues([
-            		{id:'sysUser.id', value:record.data.id},
-					{id:'sysUser.userName', value:record.data.userName},
-					{id:'sysUser.password', value:record.data.password},
-					{id:'sysUser.roleId', value:me.storeId},
-					{id:'sysUser.locked', value:record.data.locked}
-				]);
-            	me.f.getForm().findField('sysUser.userName').setReadOnly(true);
-//            	me.f.getForm().findField('sysUser.locked').setValue({'sysUser.locked' : record.data.locked});
-            	subwin_actcouponmgr.show();
-			}
-        }, {
             text:'删除',
             iconCls:'delete',
             handler: function(){
@@ -239,9 +207,9 @@ Ext.define('Business.ActCouponManagement', {
         		Ext.Msg.confirm('请确认', '确定要删除这项吗?', function(btn, text) {
         			if (btn == 'yes') {
         				Ext.Ajax.request({
-        					url : '/sys/user/deleteSysUser.atc',
+        					url : '/biz/actCoupon/deleteActCoupon.atc',
         					params : {
-        						'sysUser.id' : record.data.id
+        						'actCoupon.id' : record.data.id
         					},
         					success : function(resp, opts) {
         						var result = Ext.decode(resp.responseText);
@@ -355,6 +323,7 @@ Ext.define('Business.ActCouponManagement', {
                         height: 500,
                         constrain: false,
                         layout : 'border',
+                        closeAction: 'hide',
 //                        layout: 'fit',
                         items: [{
                         	collapsible : true,

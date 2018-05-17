@@ -174,7 +174,7 @@ Ext.define('Business.CouponManagement', {
             handler : function() {
             	subwin_couponmgr.setTitle('新建优惠券');
             	me.f.getForm().reset();
-            	Ext.getCmp("storeId").setValue(BB);
+            	me.f.getForm().findField('coupon.storeId').setValue(BB);
             	me.f.getForm().url = '/biz/coupon/insertCoupon.atc';
             	subwin_couponmgr.show();
 			}
@@ -343,6 +343,7 @@ Ext.define('Business.CouponManagement', {
                         height: 250,
                         constrain: true,
                         layout: 'fit',
+                        closeAction: 'hide',
                         items: [me.f],
                         buttons: me.buttons(me)
                     })

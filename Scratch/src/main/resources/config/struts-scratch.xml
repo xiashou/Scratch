@@ -44,4 +44,45 @@
         
     </package>
     
+    <!-- 刮奖设置 -->
+    <package name="scratch" namespace="/biz/scratch" extends="tsm-struts">
+        
+        <action name="queryScratchList" class="ScratchAction" method="queryScratchList" >
+        	<result type="json">
+            	<param name="root">scratchList</param>
+            </result>
+        </action>
+        <action name="queryScratchText" class="ScratchAction" method="queryScratchText" >
+        	<result type="json">
+            	<param name="root">scratchText</param>
+            </result>
+        </action>
+        <action name="grantScratch" class="ScratchAction" method="grantScratch" />
+        <action name="insertScratch" class="ScratchAction" method="insertScratch" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="updateScratch" class="ScratchAction" method="updateScratch" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="deleteScratch" class="ScratchAction" method="deleteScratch" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        <action name="updateTextScratch" class="ScratchAction" method="updateTextScratch" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param>
+            	<param name="includeProperties">success, msg</param>	
+            </result>
+        </action>
+        
+    </package>
+    
 </struts>

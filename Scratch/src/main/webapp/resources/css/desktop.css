@@ -167,6 +167,7 @@ div.ux-taskbar div.x-toolbar {
     padding: 8px;
     margin: 8px;
     width: 64px;
+    float: left;
 }
 
 .ux-desktop-shortcut-icon {
@@ -376,4 +377,10 @@ body .ux-notification-light {background-image: url('/resources/img/fader.png');}
     background-image: url(/resources/img/desktop/account48.png);
 }
 
+
+
+.table_edit {
+	background-image: url(/resources/img/icons/table_edit.png) !important;
+	background-repeat: no-repeat !important;
+}
 

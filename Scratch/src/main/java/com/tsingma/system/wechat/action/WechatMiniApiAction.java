@@ -67,6 +67,8 @@ public class WechatMiniApiAction extends BaseAction {
 //	        System.out.println("sessionKey:" + sessionKey + " encryptedData:" + encryptedData + " iv:" + iv);
 	        // 解密用户信息
 	        WxMaUserInfo userInfo = this.wxService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
+	        log.warn(userInfo.getOpenId() + "|" + userInfo.getAvatarUrl() + "|" + userInfo.getCity() + "|" + userInfo.getCountry() + "|" + 
+	        userInfo.getGender() + "|" + userInfo.getLanguage() + "|" + userInfo.getNickName() + "|" + userInfo.getProvince() + "|" + userInfo.getUnionId());
 	        //保存用户信息
 	        if(!memberService.checkMemberExist(userInfo.getOpenId())){
 	        	memberService.insert(userInfo);

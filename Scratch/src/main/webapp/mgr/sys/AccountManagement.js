@@ -325,6 +325,7 @@ Ext.define('System.AccountManagement', {
                     height: 180,
                     constrain: true,
                     layout: 'fit',
+                    closeAction: 'hide',
                     items: [me.f],
                     buttons: me.buttons(me)
                 })],

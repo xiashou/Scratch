@@ -17,6 +17,7 @@ public class ActCoupon {
 	private Integer actId;
 	private Integer couponId;
 	private Integer number;
+	private Integer probability;
 	private String endDate;
 	private String createdTime;
 	
@@ -64,6 +65,12 @@ public class ActCoupon {
 	}
 	public void setCouponName(String couponName) {
 		this.couponName = couponName;
+	}
+	public Integer getProbability() {
+		return probability;
+	}
+	public void setProbability(Integer probability) {
+		this.probability = probability;
 	}
 	
 }

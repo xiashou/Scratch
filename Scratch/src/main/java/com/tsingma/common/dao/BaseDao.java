@@ -123,7 +123,7 @@ public class BaseDao<T, PK extends Serializable> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public int loadCountHql(String hqlString, Object... values) {
+	public Integer loadCountHql(String hqlString, Object... values) {
 		Query<T> query = this.getSession().createQuery(hqlString);
 		if (values != null) {
             for (int i = 0; i < values.length; i++) {
@@ -131,6 +131,17 @@ public class BaseDao<T, PK extends Serializable> {
             }
         }
 		return Integer.valueOf(Utils.isEmpty(query.uniqueResult())?"0":query.uniqueResult().toString());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Double loadPriceHql(String hqlString, Object... values) {
+		Query<T> query = this.getSession().createQuery(hqlString);
+		if (values != null) {
+            for (int i = 0; i < values.length; i++) {
+                query.setParameter(i, values[i]);
+            }
+        }
+		return Double.valueOf(Utils.isEmpty(query.uniqueResult())?"0":query.uniqueResult().toString());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -240,7 +251,7 @@ public class BaseDao<T, PK extends Serializable> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<T> listByHql(String hqlString, Integer limit, Object... values) {
+	public List<T> listLimitByHql(String hqlString, Integer limit, Object... values) {
 		Query<T> query = this.getSession().createQuery(hqlString);
 		if (values != null) {
             for (int i = 0; i < values.length; i++) {

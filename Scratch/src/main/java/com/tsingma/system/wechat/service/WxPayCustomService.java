@@ -22,6 +22,8 @@ import com.github.binarywang.wxpay.bean.coupon.WxPayCouponSendRequest;
 import com.github.binarywang.wxpay.bean.coupon.WxPayCouponSendResult;
 import com.github.binarywang.wxpay.bean.coupon.WxPayCouponStockQueryRequest;
 import com.github.binarywang.wxpay.bean.coupon.WxPayCouponStockQueryResult;
+import com.github.binarywang.wxpay.bean.entpay.EntPayRequest;
+import com.github.binarywang.wxpay.bean.entpay.EntPayResult;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
 import com.github.binarywang.wxpay.bean.notify.WxScanPayNotifyResult;
@@ -85,6 +87,7 @@ public class WxPayCustomService extends WxPayServiceApacheHttpImpl implements Wx
 			payConfig.setMchKey((String) props.get("miniapp.mchKey"));
 			payConfig.setTradeType((String) props.get("miniapp.tradeType"));
 			payConfig.setNotifyUrl((String) props.get("miniapp.notifyUrl"));
+			payConfig.setKeyPath((String) props.get("miniapp.keyPath"));
 
 			this.setConfig(payConfig);
 
@@ -114,7 +117,6 @@ public class WxPayCustomService extends WxPayServiceApacheHttpImpl implements Wx
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T createOrder(WxPayUnifiedOrderRequest request) throws WxPayException {
-		// return this.wxService.createOrder(request);
 		WxPayUnifiedOrderResult unifiedOrderResult = this.unifiedOrder(request);
 		String prepayId = unifiedOrderResult.getPrepayId();
 		if (StringUtils.isBlank(prepayId)) {
@@ -176,6 +178,10 @@ public class WxPayCustomService extends WxPayServiceApacheHttpImpl implements Wx
 		result.checkResult(this, request.getSignType(), true);
 		return result;
 	}
+	
+	public EntPayResult entPay(EntPayRequest request) throws WxPayException {
+	    return this.wxService.getEntPayService().entPay(request);
+	}
 
 	@Override
 	public Map<String, String> getPayInfo(WxPayUnifiedOrderRequest request) throws WxPayException {
@@ -229,8 +235,18 @@ public class WxPayCustomService extends WxPayServiceApacheHttpImpl implements Wx
 
 	@Override
 	public WxPaySendRedpackResult sendRedpack(WxPaySendRedpackRequest request) throws WxPayException {
-		// TODO Auto-generated method stub
-		return null;
+//		return this.wxService.sendRedpack(request);
+		request.checkAndSign(this.getConfig());
+
+	    String url = this.wxService.getPayBaseUrl() + "/mmpaymkttransfers/sendredpack";
+	    if (request.getAmtType() != null) {
+	      //裂变红包
+	      url = this.wxService.getPayBaseUrl() + "/mmpaymkttransfers/sendgroupredpack";
+	    }
+
+	    String responseContent = this.post(url, request.toXML(), true);
+	    //无需校验，因为没有返回签名信息
+	    return BaseWxPayResult.fromXML(responseContent, WxPaySendRedpackResult.class);
 	}
 
 	@Override

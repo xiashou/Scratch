@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "b_coupon")
@@ -20,6 +21,9 @@ public class Coupon {
 	private String imageUrl;
 	private String endDate;
 	private String createdTime;
+	
+	@Transient
+	private String storeName;
 	
 	
 	public Integer getId() {
@@ -69,6 +73,12 @@ public class Coupon {
 	}
 	public void setCreatedTime(String createdTime) {
 		this.createdTime = createdTime;
+	}
+	public String getStoreName() {
+		return storeName;
+	}
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
 	}
 	
 }

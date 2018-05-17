@@ -5,28 +5,28 @@
 
 <struts>
 
-    <!-- 微信小程序 -->
-    <package name="setting" namespace="/biz/setting" extends="tsm-struts">
+    <!-- 微信小程序Banner管理 -->
+    <package name="banner" namespace="/biz/banner" extends="tsm-struts">
     
-        <action name="queryAppName" class="SettingAction" method="queryAppName" >
+        <action name="queryAppName" class="BannerAction" method="queryAppName" >
         	<result type="json">
             	<param name="root">appName</param>
             </result>
         </action>
         
-        <action name="queryBannerList" class="SettingAction" method="queryBannerList" >
+        <action name="queryBannerList" class="BannerAction" method="queryBannerList" >
         	<result type="json">
             	<param name="root">bannerList</param>
             </result>
         </action>
         
-        <action name="insertBanner" class="SettingAction" method="insertBanner" >
+        <action name="insertBanner" class="BannerAction" method="insertBanner" >
         	<result type="json">
             	<param name="ignoreHierarchy">false</param>
             	<param name="includeProperties">success, msg</param>	
             </result>
         </action>
-        <action name="deleteBanner" class="SettingAction" method="deleteBanner" >
+        <action name="deleteBanner" class="BannerAction" method="deleteBanner" >
         	<result type="json">
             	<param name="ignoreHierarchy">false</param>
             	<param name="includeProperties">success, msg</param>	

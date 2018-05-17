@@ -19,8 +19,8 @@ import com.tsingma.common.action.BaseAction;
 import com.tsingma.core.util.Utils;
 
 @Scope("prototype")
-@Component("SettingAction")
-public class SettingAction extends BaseAction {
+@Component("BannerAction")
+public class BannerAction extends BaseAction {
 
 	private static final long serialVersionUID = 745570317899076173L;
 	private static Logger log = Logger.getLogger("SLog");

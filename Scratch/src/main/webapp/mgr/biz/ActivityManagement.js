@@ -314,6 +314,7 @@ Ext.define('Business.ActivityManagement', {
                         height: 230,
                         constrain: true,
                         layout: 'fit',
+                        closeAction: 'hide',
                         items: [me.f],
                         buttons: me.buttons(me)
                     })

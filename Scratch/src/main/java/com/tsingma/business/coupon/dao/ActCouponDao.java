@@ -30,6 +30,36 @@ public class ActCouponDao extends BaseDao<ActCoupon, Serializable> {
 	}
 	
 	/**
+	 * 查询活动下所有优惠券
+	 * @param actId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<ActCoupon> loadListByActId(Integer actId) throws Exception {
+		return super.listByHql("from ActCoupon a where a.actId = " + actId);
+	}
+	
+	/**
+	 * 获取活动的优惠券总数
+	 * @param actId
+	 * @return
+	 * @throws Exception
+	 */
+	public Integer loadSumByActId(Integer actId) throws Exception {
+		return super.loadCountHql("select sum(a.number) from ActCoupon a where a.actId = " + actId);
+	}
+	
+	/**
+	 * 更新活动优惠券的抽中概率
+	 * @param sumNumber
+	 * @param actId
+	 * @throws Exception
+	 */
+	public void editProbability(Integer sumNumber, Integer actId) throws Exception {
+		super.excuteHql("update ActCoupon a set a.probability = ROUND(a.number*100/" + sumNumber + ") where a.actId = " + actId);
+	}
+	
+	/**
 	 * 更新活动优惠券数量
 	 * @param actId
 	 * @param couponId

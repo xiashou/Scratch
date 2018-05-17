@@ -5,15 +5,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.tsingma.business.coupon.model.Coupon;
 
 @Entity
-@Table(name = "b_member")
+@Table(name = "b_memcoupon")
 public class MemCoupon {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private Integer memId;
+	private String openid;
 	private Integer actcouponId;
 	private String code;
 	private String qrcode;
@@ -21,17 +24,20 @@ public class MemCoupon {
 	private Integer status;
 	private String createdTime;
 	
+	@Transient
+	private Coupon coupon;
+	
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getMemId() {
-		return memId;
+	public String getOpenid() {
+		return openid;
 	}
-	public void setMemId(Integer memId) {
-		this.memId = memId;
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
 	public Integer getActcouponId() {
 		return actcouponId;
@@ -68,6 +74,12 @@ public class MemCoupon {
 	}
 	public void setCreatedTime(String createdTime) {
 		this.createdTime = createdTime;
+	}
+	public Coupon getCoupon() {
+		return coupon;
+	}
+	public void setCoupon(Coupon coupon) {
+		this.coupon = coupon;
 	}
 	
 }

@@ -8,7 +8,7 @@
 <script src="/mgr/ux/map/js/jquery-1.9.1.min.js" type="text/javascript"></script>
 <link rel="stylesheet" href="/mgr/ux/map/css/jquery-ui.min.css">
 <script src="/mgr/ux/map/js/jquery-ui-1.10.4.min.js"></script>
-<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp"></script>
 <style type="text/css">
 * {
     margin: 0px;
@@ -193,7 +193,7 @@ qq.maps.event.addListener(map, "click", function (e) {
 	parent.document.getElementsByName("store.locationx")[0].value = e.latLng.getLat().toFixed(6);
 	parent.document.getElementsByName("store.locationy")[0].value = e.latLng.getLng().toFixed(6);
     document.getElementById("poi_cur").value = e.latLng.getLat().toFixed(6) + "," + e.latLng.getLng().toFixed(6);
-    url3 = encodeURI("http://apis.map.qq.com/ws/geocoder/v1/?location=" + e.latLng.getLat() + "," + e.latLng.getLng() + "&key=PQHBZ-3N4KJ-3RQFU-KCDXS-SGUE7-ECFYS&output=jsonp&&callback=?");
+    url3 = encodeURI("https://apis.map.qq.com/ws/geocoder/v1/?location=" + e.latLng.getLat() + "," + e.latLng.getLng() + "&key=PQHBZ-3N4KJ-3RQFU-KCDXS-SGUE7-ECFYS&output=jsonp&&callback=?");
     $.getJSON(url3, function (result) {
         if(result.result!=undefined){
         	parent.document.getElementsByName("store.address")[0].value = result.result.address;

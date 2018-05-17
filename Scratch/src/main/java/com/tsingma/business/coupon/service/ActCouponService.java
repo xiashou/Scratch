@@ -48,6 +48,14 @@ public class ActCouponService {
 		return actCouponDao.get(id);
 	}
 
+	/**
+	 * 添加
+	 * 插入时如果活动优惠券存在则直接增加数量
+	 * 插入后减少优惠券数量
+	 * 更新概率
+	 * @param coupon
+	 * @throws Exception
+	 */
 	public void insert(ActCoupon coupon) throws Exception {
 		ActCoupon exist = actCouponDao.loadByCondition(coupon.getActId(), coupon.getCouponId(), coupon.getEndDate());
 		if(!Utils.isEmpty(exist)){
@@ -56,6 +64,9 @@ public class ActCouponService {
 			actCouponDao.save(coupon);
 		}
 		couponDao.editNumber(coupon.getCouponId(), coupon.getNumber() * -1);
+		Integer sumNumber = actCouponDao.loadSumByActId(coupon.getActId());
+		if(sumNumber > 0)
+			actCouponDao.editProbability(sumNumber, coupon.getActId());
 	}
 	
 	public void update(ActCoupon coupon) throws Exception {
@@ -66,7 +77,24 @@ public class ActCouponService {
 		actCouponDao.merge(coupon);
 	}
 	
+	/**
+	 * 删除
+	 * 删除时返还优惠券数量
+	 * 更新概率
+	 * @param coupon
+	 * @throws Exception
+	 */
 	public void delete(ActCoupon coupon) throws Exception {
-		actCouponDao.deleteObject(coupon);
+		if(!Utils.isEmpty(coupon.getId())){
+			coupon = actCouponDao.get(coupon.getId());
+			if(!Utils.isEmpty(coupon)){
+				Integer actId = coupon.getActId();
+				couponDao.editNumber(coupon.getCouponId(), coupon.getNumber());
+				actCouponDao.deleteObject(coupon);
+				Integer sumNumber = actCouponDao.loadSumByActId(actId);
+				if(sumNumber > 0)
+					actCouponDao.editProbability(sumNumber, actId);
+			}
+		}
 	}
 }

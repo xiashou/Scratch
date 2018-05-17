@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tsingma.business.coupon.dao.CouponDao;
 import com.tsingma.business.coupon.model.Coupon;
+import com.tsingma.business.store.dao.StoreDao;
+import com.tsingma.business.store.model.Store;
+import com.tsingma.core.util.Utils;
 
 @Service("couponService")
 @Transactional
@@ -15,6 +18,8 @@ public class CouponService {
 
 	@Autowired
 	private CouponDao couponDao;
+	@Autowired
+	private StoreDao storeDao;
 	
 	/**
 	 * 分页查询优惠券
@@ -37,7 +42,11 @@ public class CouponService {
 	}
 	
 	public Coupon getById(Integer id) throws Exception {
-		return couponDao.get(id);
+		Coupon coupon = couponDao.get(id);
+		Store store = storeDao.get(coupon.getStoreId());
+		if(!Utils.isEmpty(store))
+			coupon.setStoreName(store.getName());
+		return coupon;
 	}
 
 	public void insert(Coupon coupon) throws Exception {

@@ -36,14 +36,24 @@ public class ActivityService {
 		return activityDao.loadEnableActivity(appid);
 	}
 	
+//	/**
+//	 * 增加活动虚拟参加人数和实际人数
+//	 * @param id
+//	 * @param number
+//	 * @throws Exception
+//	 */
+//	public void addNumber(Integer id, Integer number) throws Exception {
+//		activityDao.addNumber(id, number);
+//	}
+	
 	/**
 	 * 增加活动虚拟参加人数
 	 * @param id
 	 * @param number
 	 * @throws Exception
 	 */
-	public void addVirNumber(Integer id, Integer number) throws Exception {
-		activityDao.addVirNumber(id, number);
+	public void addBroNumber(Integer id, Integer number) throws Exception {
+		activityDao.addBroNumber(id, number);
 	}
 	
 	public Activity getById(Integer id) throws Exception {

@@ -38,16 +38,26 @@ public class ActivityDao extends BaseDao<Activity, Serializable> {
 	 * @throws Exception
 	 */
 	public void editDisabled(String appid) throws Exception {
-		super.excuteHql("update Activity a set a.enable = 0 where a.appid = " + appid);
+		super.excuteHql("update Activity a set a.enable = 0 where a.appid = '" + appid + "'");
 	}
 	
 	/**
-	 * 增加活动虚拟参加人数
+	 * 增加活动虚拟参加人数和实际人数
 	 * @param id
 	 * @param number
 	 * @throws Exception
 	 */
-	public void addVirNumber(Integer id, Integer number) throws Exception {
-		super.excuteHql("update Activity a set a.virNumber = a.virNumber + " + number + " where a.id = " + id);
+	public void addNumber(String appid, Integer number) throws Exception {
+		super.excuteHql("update Activity a set a.virNumber = a.virNumber + " + number + ", a.actNumber = a.actNumber + " + number + " where a.appid = '" + appid + "' and a.enable = 1");
+	}
+	
+	/**
+	 * 增加活动浏览参加人数
+	 * @param id
+	 * @param number
+	 * @throws Exception
+	 */
+	public void addBroNumber(Integer id, Integer number) throws Exception {
+		super.excuteHql("update Activity a set a.broNumber = a.broNumber + " + number + " where a.id = " + id);
 	}
 }

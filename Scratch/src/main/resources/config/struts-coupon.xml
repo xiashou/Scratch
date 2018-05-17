@@ -14,6 +14,11 @@
             	<param name="includeProperties">couponList.*, totalCount, success, msg</param>
             </result>
         </action>
+        <action name="queryById" class="CouponAction" method="queryById" >
+            <result type="json">
+            	<param name="root">coupon</param> 
+            </result>
+        </action>
         <action name="insertCoupon" class="CouponAction" method="insertCoupon" >
         	<result type="json">
             	<param name="ignoreHierarchy">false</param>

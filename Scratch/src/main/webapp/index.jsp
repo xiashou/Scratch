@@ -9,7 +9,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>智能工匠 - Desktop Sample App</title>
+	<title>天天刮刮购 - Scrape and buy every day</title>
 
     <link rel="stylesheet" type="text/css" href="<%=basePath %>/resources/css/desktop.css" />
     <link rel="stylesheet" type="text/css" href="<%=basePath %>/resources/css/icon.css" />

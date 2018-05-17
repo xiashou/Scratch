@@ -14,6 +14,57 @@
             	<param name="includeProperties">memberList.*, totalCount, success, msg</param>
             </result>
         </action>
+        <action name="queryRecordListByOpenid" class="MemberAction" method="queryRecordListByOpenid" >
+            <result type="json">
+            	<param name="root">recordList</param>
+            </result>
+        </action>
+        <action name="queryRankingByAppid" class="MemberAction" method="queryRankingByAppid" >
+            <result type="json">
+            	<param name="root">rankingList</param>
+            </result>
+        </action>
+        
+    </package>
+    
+    <package name="memCoupon" namespace="/biz/memCoupon" extends="tsm-struts">
+        
+        <action name="queryListByOpenid" class="MemCouponAction" method="queryListByOpenid" >
+        	<result type="json">
+            	<param name="root">memCouponList</param>
+            </result>
+        </action>
+        <action name="queryListThreeByOpenid" class="MemCouponAction" method="queryListThreeByOpenid" >
+        	<result type="json">
+            	<param name="root">memCouponList</param>
+            </result>
+        </action>
+        
+    </package>
+    
+    <package name="memScratch" namespace="/biz/memScratch" extends="tsm-struts">
+        
+        <action name="queryListByOpenid" class="MemScratchAction" method="queryListByOpenid" >
+        	<result type="json">
+            	<param name="root">memScratch</param>
+            </result>
+        </action>
+        <action name="queryCountByOpenid" class="MemScratchAction" method="queryCountByOpenid" >
+        	<result type="json">
+            	<param name="root">times</param>
+            </result>
+        </action>
+        <action name="queryPriceByOpenid" class="MemScratchAction" method="queryPriceByOpenid" >
+        	<result type="json">
+            	<param name="root">price</param>
+            </result>
+        </action>
+        <action name="alreadyScratch" class="MemScratchAction" method="alreadyScratch" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param> 
+            	<param name="includeProperties">success, msg</param>
+            </result>
+        </action>
         
     </package>
     

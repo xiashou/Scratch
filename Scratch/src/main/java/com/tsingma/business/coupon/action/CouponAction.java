@@ -50,6 +50,20 @@ public class CouponAction extends BaseAction {
 		return SUCCESS;
 	}
 	
+	/**
+	 * 根据id查询优惠券信息
+	 * @return
+	 */
+	public String queryById() {
+		try {
+			if(!Utils.isEmpty(coupon) && !Utils.isEmpty(coupon.getId()))
+				coupon = couponService.getById(coupon.getId());
+		} catch(Exception e) {
+			log.error(Utils.getErrorMessage(e));
+		}
+		return SUCCESS;
+	}
+	
 	public String insertCoupon() {
 		try {
 			if(!Utils.isEmpty(coupon)){

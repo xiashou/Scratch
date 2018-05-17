@@ -1,4 +1,4 @@
-package com.tsingma.business.member.model;
+package com.tsingma.business.scratch.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,20 +7,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "b_memscratch")
-public class MemScratch {
+@Table(name = "b_scratch")
+public class Scratch {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private String openid;
 	private Integer actId;
 	private String name;
 	private Double price;
-	private String tradeNo;
-	private Integer isscratch;
-	private String scratchTime;
-	private Integer status;
+	private Integer probability;
 	private String createdTime;
 	
 	public Integer getId() {
@@ -28,12 +24,6 @@ public class MemScratch {
 	}
 	public void setId(Integer id) {
 		this.id = id;
-	}
-	public String getOpenid() {
-		return openid;
-	}
-	public void setOpenid(String openid) {
-		this.openid = openid;
 	}
 	public Integer getActId() {
 		return actId;
@@ -53,35 +43,17 @@ public class MemScratch {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-	public Integer getIsscratch() {
-		return isscratch;
+	public Integer getProbability() {
+		return probability;
 	}
-	public void setIsscratch(Integer isscratch) {
-		this.isscratch = isscratch;
-	}
-	public Integer getStatus() {
-		return status;
-	}
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setProbability(Integer probability) {
+		this.probability = probability;
 	}
 	public String getCreatedTime() {
 		return createdTime;
 	}
 	public void setCreatedTime(String createdTime) {
 		this.createdTime = createdTime;
-	}
-	public String getTradeNo() {
-		return tradeNo;
-	}
-	public void setTradeNo(String tradeNo) {
-		this.tradeNo = tradeNo;
-	}
-	public String getScratchTime() {
-		return scratchTime;
-	}
-	public void setScratchTime(String scratchTime) {
-		this.scratchTime = scratchTime;
 	}
 	
 }

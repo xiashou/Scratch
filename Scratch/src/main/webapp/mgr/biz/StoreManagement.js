@@ -376,6 +376,7 @@ Ext.define('Business.StoreManagement', {
                         height: 350,
                         constrain: true,
                         layout: 'fit',
+                        closeAction: 'hide',
                         items: [me.f],
                         buttons: me.buttons(me)
                     }), mapwin_storemgr = Ext.create('Ext.Window', {

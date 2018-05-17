@@ -60,9 +60,9 @@ public class ActivityAction extends BaseAction {
 //				request.setNotifyUrl("http://tsingma.imwork.net/pay/wechatPayNotify");
 				request.setOpenid(openId);
 				
-				paymentService.insertByOrderRequest(request);
+				paymentService.insertByOrderRequest(request, super.getWxMaConfig().getAppid());
 				result = wxPayCustomService.createOrder(request);
-	        } 
+	        }
 		} catch(Exception e) {
 			e.printStackTrace();
 			log.error(Utils.getErrorMessage(e));
@@ -95,8 +95,11 @@ public class ActivityAction extends BaseAction {
 		try {
 			if (!Utils.isEmpty(tcode)) {
 				activity = activityService.getEnableActivity(tcode);
+				//增加活动浏览人数
+				activityService.addBroNumber(activity.getId(), 1);
 	        } 
 		} catch(Exception e) {
+			e.printStackTrace();
 			log.error(Utils.getErrorMessage(e));
 		}
 		return SUCCESS;
@@ -113,6 +116,8 @@ public class ActivityAction extends BaseAction {
 					} else 
 						this.setResult(false, "请上传正确的图片格式！");
 		        }
+				activity.setBroNumber(0);
+				activity.setActNumber(0);
 				activity.setCreatedTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
 				activityService.insert(activity);
 				this.setResult(true, "添加成功！");
@@ -134,7 +139,7 @@ public class ActivityAction extends BaseAction {
 				exist.setPrice(activity.getPrice());
 				exist.setVirNumber(activity.getVirNumber());
 				if (!Utils.isEmpty(image)) {
-					String fileName = upload("activity/" + activity.getAppid(), image, imageFileName);
+					String fileName = upload("activity/" + exist.getAppid(), image, imageFileName);
 					if(fileName.contains("jpeg") || fileName.contains("jpg") || fileName.contains("png") || fileName.contains("gif")){
 						exist.setImageUrl(fileName);
 					} else 

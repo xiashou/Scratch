@@ -125,6 +125,7 @@ CREATE TABLE `b_actcoupon` (
 	`actId` int(11) unsigned NOT NULL COMMENT '活动id',
 	`couponId` int(11) unsigned NOT NULL COMMENT '优惠券id',
 	`number` int(11) unsigned DEFAULT 0 COMMENT '剩余数量',
+	`probability` int(5) unsigned DEFAULT 0 COMMENT '产生概率',
 	`endDate` varchar(20) DEFAULT NULL COMMENT '有效期至',
 	`createdTime` varchar(20) DEFAULT NULL COMMENT '创建时间',
   	PRIMARY KEY (`id`)
@@ -134,7 +135,7 @@ CREATE TABLE `b_actcoupon` (
 DROP TABLE IF EXISTS `b_memcoupon`;
 CREATE TABLE `b_memcoupon` (
   	`id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
-	`memId` int(11) unsigned NOT NULL COMMENT '会员id',
+	`openid` varchar(200) DEFAULT NULL COMMENT '会员openId',
 	`actcouponId` int(11) unsigned NOT NULL COMMENT '活动优惠券id',
 	`code` varchar(20) NOT NULL COMMENT '优惠券码',
 	`qrcode` text DEFAULT NULL COMMENT '二维码',
@@ -148,13 +149,51 @@ CREATE TABLE `b_memcoupon` (
 DROP TABLE IF EXISTS `b_memscratch`;
 CREATE TABLE `b_memscratch` (
   	`id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
-	`memId` int(11) unsigned NOT NULL COMMENT '会员id',
+	`openid` varchar(200) DEFAULT NULL COMMENT '会员openId',
 	`actId` int(11) unsigned NOT NULL COMMENT '活动id',
 	`name` varchar(20) NOT NULL COMMENT '奖品名称',
-	`price` int(10) unsigned DEFAULT 0 COMMENT '刮中金额',
+	`price` decimal(10, 2) unsigned DEFAULT 0 COMMENT '刮中金额',
+	`tradeNo` varchar(30) DEFAULT NULL COMMENT '订单号',
 	`isscratch` int(1) unsigned DEFAULT 0 COMMENT '是否刮奖',
+	`scratchTime` varchar(20) DEFAULT NULL COMMENT '刮奖时间',
 	`status` int(1) unsigned DEFAULT 0 COMMENT '状态',
 	`createdTime` varchar(20) DEFAULT NULL COMMENT '创建时间',
   	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动刮奖信息表';
+
+DROP TABLE IF EXISTS `b_scratch`;
+CREATE TABLE `b_scratch` (
+  	`id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+	`actId` int(11) unsigned NOT NULL COMMENT '活动id',
+	`name` varchar(50) NOT NULL COMMENT '奖品名称',
+	`price` decimal(10, 2) unsigned DEFAULT 0 COMMENT '金额',
+	`probability` int(5) unsigned DEFAULT 0 COMMENT '中奖概率',
+	`createdTime` varchar(20) DEFAULT NULL COMMENT '创建时间',
+  	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='刮奖设置表';
+
+DROP TABLE IF EXISTS `b_scratch_text`;
+CREATE TABLE `b_scratch_text` (
+  	`id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+	`actId` int(11) unsigned NOT NULL COMMENT '活动id',
+	`name` varchar(50) NOT NULL COMMENT '未中奖文本',
+	`describ` text DEFAULT NULL COMMENT '说明',
+	`createdTime` varchar(20) DEFAULT NULL COMMENT '创建时间',
+  	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='刮奖文本设置表';
+
+DROP TABLE IF EXISTS `b_entpayment`;
+CREATE TABLE `b_entpayment` (
+  	`id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  	`appid` varchar(50) DEFAULT NULL COMMENT '小程序id',
+  	`mchId` varchar(50) DEFAULT NULL COMMENT '商户id',
+  	`resultCode` varchar(20) DEFAULT NULL COMMENT '支付结果',
+  	`errorCode` varchar(40) DEFAULT NULL COMMENT '错误代码',
+  	`errorMsg` varchar(200) DEFAULT NULL COMMENT '错误描述',
+  	`tradeNo` varchar(50) DEFAULT NULL COMMENT '订单号',
+  	`paymentNo` varchar(50) DEFAULT NULL COMMENT '微信订单号',
+  	`paymentTime` varchar(20) DEFAULT NULL COMMENT '支付完成时间',
+  	`createdTime` varchar(20) DEFAULT NULL COMMENT '创建时间',
+  	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='企业付款信息表';
 
