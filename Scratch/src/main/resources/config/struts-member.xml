@@ -39,7 +39,12 @@
             	<param name="root">memCouponList</param>
             </result>
         </action>
-        
+        <action name="queryListPage" class="MemCouponAction" method="queryListPage" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param> 
+            	<param name="includeProperties">memCouponList.*, totalCount, success, msg</param>
+            </result>
+        </action>
     </package>
     
     <package name="memScratch" namespace="/biz/memScratch" extends="tsm-struts">
@@ -63,6 +68,12 @@
         	<result type="json">
             	<param name="ignoreHierarchy">false</param> 
             	<param name="includeProperties">success, msg</param>
+            </result>
+        </action>
+        <action name="queryListPage" class="MemScratchAction" method="queryListPage" >
+        	<result type="json">
+            	<param name="ignoreHierarchy">false</param> 
+            	<param name="includeProperties">memScratchList.*, totalCount, success, msg</param>
             </result>
         </action>
         

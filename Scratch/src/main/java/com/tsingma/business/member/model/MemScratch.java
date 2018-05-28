@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "b_memscratch")
@@ -22,6 +23,9 @@ public class MemScratch {
 	private String scratchTime;
 	private Integer status;
 	private String createdTime;
+	
+	@Transient
+	private Member member;
 	
 	public Integer getId() {
 		return id;
@@ -82,6 +86,12 @@ public class MemScratch {
 	}
 	public void setScratchTime(String scratchTime) {
 		this.scratchTime = scratchTime;
+	}
+	public Member getMember() {
+		return member;
+	}
+	public void setMember(Member member) {
+		this.member = member;
 	}
 	
 }

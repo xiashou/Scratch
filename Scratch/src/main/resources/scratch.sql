@@ -138,7 +138,6 @@ CREATE TABLE `b_memcoupon` (
 	`openid` varchar(200) DEFAULT NULL COMMENT '会员openId',
 	`actcouponId` int(11) unsigned NOT NULL COMMENT '活动优惠券id',
 	`code` varchar(20) NOT NULL COMMENT '优惠券码',
-	`qrcode` text DEFAULT NULL COMMENT '二维码',
 	`endDate` varchar(20) DEFAULT NULL COMMENT '有效期至',
 	`status` int(1) unsigned DEFAULT 0 COMMENT '状态',
 	`createdTime` varchar(20) DEFAULT NULL COMMENT '创建时间',

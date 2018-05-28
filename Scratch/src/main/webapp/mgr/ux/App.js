@@ -33,7 +33,8 @@ Ext.define('MyDesktop.App', {
         'Business.MemberReport',			//会员报表
         'Business.BannerManagement',		//Banner管理
         'Business.ActivityManagement',		//活动管理
-//        'MyDesktop.CouponReport',			//会员优惠券报表
+        'Business.MemCouponManagement',		//会员优惠券管理
+        'Business.MemScratchManagement',	//会员刮奖管理
 //        'MyDesktop.WinningManagement',	//中奖报表
         
         'MyDesktop.Settings'
@@ -55,6 +56,8 @@ Ext.define('MyDesktop.App', {
     			new Business.StoreManagement(),
     			new Business.ActivityManagement(),
     			new Business.ActCouponManagement(),
+    			new Business.MemCouponManagement(),
+    			new Business.MemScratchManagement(),
     			new Business.ScratchSetting(),
     			new Business.MemberReport()
           ];
@@ -77,6 +80,8 @@ Ext.define('MyDesktop.App', {
                     { name: '活动管理', iconCls: 'activity-shortcut', module: 'activity-mgr'},
                     { name: '会员报表', iconCls: 'member-shortcut', module: 'member-rpt'},
                     { name: '优惠券管理', iconCls: 'coupon-shortcut', module: 'actcoupon-mgr'},
+                    { name: '会员优惠券管理', iconCls: 'memcou-shortcut', module: 'memcou-mgr'},
+                    { name: '会员刮奖管理', iconCls: 'memscr-shortcut', module: 'memscr-mgr'},
                     { name: '刮奖设置', iconCls: 'setting-shortcut', module: 'scratch-set'},
                     { name: '系统账户管理', iconCls: 'account-shortcut', module: 'account-mgr'}
                 ]

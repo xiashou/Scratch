@@ -1,12 +1,19 @@
 package com.tsingma.business.member.dao;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Component;
 
 import com.tsingma.business.member.model.MemScratch;
 import com.tsingma.common.dao.BaseDao;
+import com.tsingma.core.util.Utils;
 
 @Component("memScratchDao")
 public class MemScratchDao extends BaseDao<MemScratch, Serializable> {
@@ -61,5 +68,47 @@ public class MemScratchDao extends BaseDao<MemScratch, Serializable> {
 	 */
 	public Double loadPriceByOpenid(String openid) throws Exception {
 		return super.loadPriceHql("select sum(m.price) from MemScratch m where m.openid = ?0 and m.isscratch = 1", openid);
+	}
+	
+	/**
+	 * 分页查询用户优惠券
+	 * @param memCoupon
+	 * @param start
+	 * @param limit
+	 * @return
+	 * @throws Exception
+	 */
+	public List<MemScratch> loadListPage(MemScratch memScratch, int start, int limit) throws Exception {
+		CriteriaBuilder builder = super.getSession().getCriteriaBuilder();  
+		CriteriaQuery<MemScratch> query = builder.createQuery(MemScratch.class);
+        List<Predicate> predicatesList = new ArrayList<Predicate>();
+        Root<MemScratch> root = query.from(MemScratch.class); 
+        query.select(root);
+        if(!Utils.isEmpty(memScratch.getActId()))
+        	predicatesList.add(builder.equal(root.get("actId"), memScratch.getActId()));
+        if(!Utils.isEmpty(memScratch.getIsscratch()))
+        	predicatesList.add(builder.equal(root.get("isscratch"), memScratch.getIsscratch()));
+        query.where(predicatesList.toArray(new Predicate[predicatesList.size()]));
+		return super.listPage(query, start, limit);
+	}
+	
+	/**
+	 * 分页总数
+	 * @param store
+	 * @return
+	 * @throws Exception
+	 */
+	public Long loadListCount(MemScratch memScratch) throws Exception {
+		CriteriaBuilder builder = super.getSession().getCriteriaBuilder();  
+		CriteriaQuery<Long> query = builder.createQuery(Long.class);
+		List<Predicate> predicatesList = new ArrayList<Predicate>();
+		Root<MemScratch> root = query.from(MemScratch.class);  
+		query.select(builder.count(root));
+		if(!Utils.isEmpty(memScratch.getActId()))
+        	predicatesList.add(builder.equal(root.get("actId"), memScratch.getActId()));
+        if(!Utils.isEmpty(memScratch.getIsscratch()))
+        	predicatesList.add(builder.equal(root.get("isscratch"), memScratch.getIsscratch()));
+		query.where(predicatesList.toArray(new Predicate[predicatesList.size()]));
+		return super.listCount(query);
 	}
 }

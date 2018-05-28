@@ -1,9 +1,9 @@
 /*
- * 商户优惠券管理
+ * 会员刮奖管理
  * xs
- * 2018/04/24
+ * 2018/05/18
  */
-Ext.define('Business.CouponManagement', {
+Ext.define('Business.MemScratchManagement', {
 	extend: 'Ext.ux.desktop.Module',
 
     requires: [
@@ -12,29 +12,30 @@ Ext.define('Business.CouponManagement', {
         'Ext.grid.RowNumberer'
     ],
 
-    id:'coupon-mgr',
+    id:'memscr-mgr',
 
     init : function(){
         this.launcher = {
-            text: '优惠券管理',
-            iconCls:'coupon'
+            text: '会员刮奖',
+            iconCls:'memscr'
         };
     },
     
     store: new Ext.data.Store({
 		pageSize : 20,
-		fields: ['id', 'storeId', 'name', 'describ', 'number', 'imageUrl', 'endDate', 'createdTime'],
+		fields: ['id', 'openid', 'actId', 'name', 'price', 'tradeNo', 'isscratch', 'member.nickName', 'scratchTime', 'status', 'createdTime'],
 		proxy : {
 			type : 'ajax',
-			url : '/biz/coupon/queryListPage.atc',
+			url : '/biz/memScratch/queryListPage.atc',
 			reader : {
-				root : 'couponList',
+				root : 'memScratchList',
 				totalProperty: 'totalCount'
 			}
 		}
 	}),
 	
-	f: new Ext.form.FormPanel({
+	f : new Ext.form.FormPanel({
+		id : 'f',
 		layout : 'anchor',
 		defaults : {
 			anchor : '100%',
@@ -46,49 +47,90 @@ Ext.define('Business.CouponManagement', {
 		items : [ {
 			defaults : {flex : 1,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
 			items : [ {
-				name : 'coupon.name',
-				fieldLabel : '名称',
+				id : 'name',
+				name : 'store.name',
+				fieldLabel : '商户名称',
 			},{
-				name : 'coupon.number',
-				fieldLabel : '数量',
-				xtype: 'numberfield'
+				id : 'phone',
+				name : 'store.phone',
+				fieldLabel : '联系电话',
 			},{
-				name : 'coupon.storeId',
+				id : 'id',
+				name : 'store.id',
 				xtype: 'hiddenfield'
+			}]
+		},{
+			defaults : {flex : 1,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
+			items : [{
+				id : 'address',
+				name: 'store.address',
+				fieldLabel : '地址'
+			}]
+		},{
+			defaults : {flex : 8,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
+			items: [ {
+				id : 'locationx',
+				name: 'store.locationx',
+				fieldLabel : '地址x坐标',
+				readOnly:true, 
+				fieldStyle:'background-color: #F0F0F0;'
 			},{
-				name : 'coupon.id',
-				xtype: 'hiddenfield'
+				id : 'locationy',
+				name: 'store.locationy',
+				fieldLabel : '地址y坐标',
+				readOnly:true, 
+				fieldStyle:'background-color: #F0F0F0;'
 			}]
 		},{
 			defaults : {flex : 1,xtype : 'textarea',labelWidth : 70,labelAlign : 'right'},
 			items : [ {
-				name: 'coupon.describ',
-				fieldLabel : '描述',
-				rows: 2
+				fieldLabel : '商户简介',
+				id : 'introduction',
+				name: 'store.introduction',
+				rows: 3
 			} ]
 		},{
-			defaults : {flex : 5,xtype : 'filefield',labelWidth : 70,labelAlign : 'right'},
+			defaults : {flex : 3,xtype : 'filefield',labelWidth : 70,labelAlign : 'right'},
 			items : [ {
-				fieldLabel : '图片',
+				fieldLabel : '小图',
+				id : 'head',
+				name: 'head',
+				buttonText: '浏览...',
+				anchor : '99%'
+			},{
+				xtype : 'displayfield',
+				flex : 1,
+				labelWidth : 5,
+				fieldLabel : '&nbsp;',
+				labelSeparator: '',
+				value:'最佳尺寸180*180'
+			} ]
+		},{
+			defaults : {flex : 3,xtype : 'filefield',labelWidth : 70,labelAlign : 'right'},
+			items : [ {
+				fieldLabel : '大图',
+				id : 'image',
 				name: 'image',
 				buttonText: '浏览...',
 				anchor : '99%'
 			},{
 				xtype : 'displayfield',
-				flex : 2,
+				flex : 1,
 				labelWidth : 5,
 				fieldLabel : '&nbsp;',
 				labelSeparator: '',
-				value:'最佳尺寸80*80'
+				value:'最佳尺寸750*408'
 			} ]
 		},{
-			defaults : {flex : 1,xtype : 'datefield',labelWidth : 70,labelAlign : 'right'},
+			defaults : {flex : 1,xtype : 'radiogroup',labelWidth : 70,labelAlign : 'right'},
 			items: [{
-				name: 'coupon.endDate',
-				fieldLabel: '到期日期',
-				format:'Y/m/d'
+				id:'enable', 
+				fieldLabel: '是否可用', 
+				defaults: {name: 'store.enable'},
+	        	items: [{inputValue: true, boxLabel: '正常', checked: true}, {inputValue: false,boxLabel: '锁定'}]
 			},{
 				xtype : 'displayfield',
+				flex : 1,
 				fieldLabel : '&nbsp;',
 				labelSeparator: '',
 				value:''
@@ -123,37 +165,37 @@ Ext.define('Business.CouponManagement', {
 			text : '关 闭 ',
 			iconCls : 'stop',
 			handler : function() {
-				subwin_couponmgr.hide();
+				subwin_memscrmgr.hide();
 			}
 		}];
 	},
 	
-	imageRenderer: function(value, metaData, record) {
-		if(value){
-  			metaData.tdAttr = "data-qtip=\"<img src='/upload/coupon/" + value + "' style='width:100px; height:100px'/>\""; 
-  			return '<img src="/upload/coupon/' + value + '" style="height:15px" onerror="this.src=\'/resources/img/noImage.png\'" />';
-  		} else
-  			return '<img src="/resources/img/noImage.png" style="height:20px" />';
+	scratchRenderer : function(value, metaData, record) {
+		if(value == 0)
+  			return '<font color=red>未刮奖</font>';
+  		else if(value == 1)
+  			return '<font color=green>已刮奖</font>';
+  		else
+  			return '未知';
+    },
+	
+	statusRenderer : function(value, metaData, record) {
+		if(value == 0)
+  			return '<font color=red>未支付</font>';
+  		else if(value == 1)
+  			return '<font color=green>已支付</font>';
+  		else
+  			return '未知';
     },
     
     selModel: Ext.create('Ext.selection.CheckboxModel', {
 		injectCheckbox : 1,
 		mode : 'SINGLE'
 	}),
-    
+	
 	tbar: function(me) {
 		var desktop = me.app.getDesktop();
 		return [{
-            text:'新增',
-            iconCls:'add',
-            handler : function() {
-            	subwin_couponmgr.setTitle('新建优惠券');
-            	me.f.getForm().reset();
-            	me.f.getForm().findField('coupon.storeId').setValue(BB);
-            	me.f.getForm().url = '/biz/coupon/insertCoupon.atc';
-            	subwin_couponmgr.show();
-			}
-        }, {
             text:'修改',
             iconCls:'pencil',
             handler : function() {
@@ -167,7 +209,7 @@ Ext.define('Business.CouponManagement', {
         			});
         			return;
         		}
-        		subwin_couponmgr.setTitle('修改优惠券');
+        		subwin_memscrmgr.setTitle('修改优惠券');
         		me.f.getForm().reset();
             	me.f.getForm().url = '/biz/coupon/updateCoupon.atc';
             	me.selModel.deselectAll();
@@ -180,63 +222,15 @@ Ext.define('Business.CouponManagement', {
 					{id:'coupon.number', value:record.data.number},
 					{id:'coupon.endDate', value:record.data.endDate}
 				]);
-        		subwin_couponmgr.show();
+            	subwin_memscrmgr.show();
 			}
-        }, {
-            text:'删除',
-            iconCls:'delete',
-            handler: function(){
-            	var record = me.selModel.getSelection()[0];
-        		if (Ext.isEmpty(record)) {
-        			Ext.MessageBox.show({
-        				title : '提示',
-        				msg : '你没有选中任何项目！',
-        				buttons : Ext.MessageBox.OK,
-        				icon : Ext.MessageBox.INFO
-        			});
-        			return;
-        		}
-        		Ext.Msg.confirm('请确认', '确定要删除这项吗?', function(btn, text) {
-        			if (btn == 'yes') {
-        				Ext.Ajax.request({
-        					url : '/biz/coupon/deleteCoupon.atc',
-        					params : {
-        						'coupon.id' : record.data.id
-        					},
-        					success : function(resp, opts) {
-        						var result = Ext.decode(resp.responseText);
-        						if (result.success) {
-        							desktop.showMessage(result.msg);
-        							me.selModel.deselectAll();
-        							me.store.reload();
-        						} else
-        							Ext.MessageBox.show({
-        								title : '提示',
-        								msg : result.msg,
-        								buttons : Ext.MessageBox.OK,
-        								icon : Ext.MessageBox.ERROR
-        							});
-        					},
-        					failure : function(resp, opts) {
-        						var result = Ext.decode(resp.responseText);
-        						Ext.MessageBox.show({
-        							title : '提示',
-        							msg : result.msg,
-        							buttons : Ext.MessageBox.OK,
-        							icon : Ext.MessageBox.ERROR
-        						});
-        					}
-        				});
-        			}
-        		});
-            }
         }]
 	},
-
+	
     createWindow : function(){
     	var me = this;
         var desktop = me.app.getDesktop();
-        var win = desktop.getWindow('coupon-mgr');
+        var win = desktop.getWindow('memcou-mgr');
         
         var pagesizeCombo = desktop.getPagesizeCombo();
         var number = parseInt(pagesizeCombo.getValue());
@@ -263,11 +257,11 @@ Ext.define('Business.CouponManagement', {
 	  	
         if(!win){
             win = desktop.createWindow({
-                id: 'coupon-mgr',
-                title:'优惠券管理',
+                id: 'memscr-mgr',
+                title:'会员刮奖',
                 width:900,
                 height:580,
-                iconCls: 'coupon',
+                iconCls: 'memscr',
                 animCollapse:false,
                 constrainHeader:true,
                 layout: 'fit',
@@ -283,39 +277,50 @@ Ext.define('Business.CouponManagement', {
             		loadMask : {msg : '正在加载表格数据,请稍等...'},
             		columns: [new Ext.grid.RowNumberer({
 	                    	header : 'No',
-	                		width : '5%'
+	                		width : '4%'
 	                    }), {
 	                		dataIndex : 'id',
 	                		hidden: true
 	                    },{
-	                    	text : '名称',
-	                    	dataIndex : 'name',
+	                    	dataIndex : 'openid',
+	                    	hidden: true
+	                    },{
+	                    	dataIndex : 'actId',
+	                    	hidden: true
+	                    },{
+	                    	text : '会员昵称',
+	                    	dataIndex : 'member.nickName',
 	                		width : '20%'
 	                    },{
-	                    	text : '描述',
-	                    	dataIndex : 'describ',
+	                    	text : '奖品',
+	                    	dataIndex : 'name',
 	                    	width : '20%'
 	                    },{
-	                    	text : '数量',
-	                		dataIndex : 'number',
+	                    	text : '金额',
+	                		dataIndex : 'price',
 	                		width : '10%'
 	                    },{
-	                    	text : '图片',
-	                    	dataIndex : 'imageUrl',
+	                    	text : '是否刮奖',
+	                    	dataIndex : 'isscratch',
 	                    	width : '10%',
-	                    	renderer: me.imageRenderer
+	                    	renderer: me.scratchRenderer
 	                    },{
-	                    	text : '到期日期',
-	                    	dataIndex : 'endDate',
+	                    	text : '刮奖时间',
+	                    	dataIndex : 'scratchTime',
 	                    	width : '15%'
 	                    },{
-	                    	text : '创建时间',
+	                    	text : '状态',
+	                    	dataIndex : 'status',
+	                    	width : '10%',
+	                    	renderer: me.statusRenderer
+	                    },{
+	                    	text : '购买时间',
 	                    	dataIndex : 'createdTime',
-	                    	width : '20%'
+	                    	width : '15%'
 	                    }]
-                    }, subwin_couponmgr = Ext.create('Ext.Window', {
-                        width: 460,
-                        height: 250,
+                    }, subwin_memscrmgr = Ext.create('Ext.Window', {
+                        width: 520,
+                        height: 350,
                         constrain: true,
                         layout: 'fit',
                         closeAction: 'hide',
@@ -323,15 +328,11 @@ Ext.define('Business.CouponManagement', {
                         buttons: me.buttons(me)
                     })
                 ],
-                tbar: me.tbar(me),
-                bbar: bbar,
+//                tbar:me.tbar(me),
+                bbar:bbar,
                 listeners: {
                     show: function() {
-                    	me.store.load({
-                    		params: {
-                    			'coupon.storeId': BB
-                    		}
-                    	});
+                    	me.store.load();
                     }
                 }
             });

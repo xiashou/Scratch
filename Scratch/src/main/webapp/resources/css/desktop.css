@@ -376,6 +376,18 @@ body .ux-notification-light {background-image: url('/resources/img/fader.png');}
 .account-shortcut {
     background-image: url(/resources/img/desktop/account48.png);
 }
+.memcou {
+    background-image:url(/resources/img/desktop/memcou.png) !important;
+}
+.memcou-shortcut {
+    background-image: url(/resources/img/desktop/memcou48.png);
+}
+.memscr {
+    background-image:url(/resources/img/desktop/memsrc.png) !important;
+}
+.memscr-shortcut {
+    background-image: url(/resources/img/desktop/memsrc48.png);
+}
 
 
 

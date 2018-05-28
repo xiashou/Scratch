@@ -82,6 +82,20 @@ public class MemScratchAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
+	
+	public String queryListPage(){
+		try {
+			if (!Utils.isEmpty(super.getWxMaConfig())) {
+				if(Utils.isEmpty(memScratch))
+					memScratch = new MemScratch();
+				this.setTotalCount(memScratchService.getListCount(memScratch));
+				memScratchList = memScratchService.getListPage(memScratch, this.getStart(), this.getLimit());
+	        } 
+		} catch(Exception e) {
+			log.error(Utils.getErrorMessage(e));
+		}
+		return SUCCESS;
+	}
 
 	public List<MemScratch> getMemScratchList() {
 		return memScratchList;

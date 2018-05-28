@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tsingma.business.member.dao.MemScratchDao;
+import com.tsingma.business.member.dao.MemberDao;
 import com.tsingma.business.member.model.MemScratch;
+import com.tsingma.business.member.model.Member;
 import com.tsingma.core.util.Utils;
 
 @Service("memScratchService")
@@ -18,6 +20,8 @@ public class MemScratchService {
 
 	@Autowired
 	private MemScratchDao memScratchDao;
+	@Autowired
+	private MemberDao memberDao;
 	
 	/**
 	 * 根据openid查询会员最后刮奖结果
@@ -59,5 +63,18 @@ public class MemScratchService {
 	 */
 	public void updateAlreadyScratch(Integer id) throws Exception {
 		memScratchDao.editAlreadyScratch(id, new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+	}
+	
+	public List<MemScratch> getListPage(MemScratch memScratch, int start, int limit) throws Exception {
+		List<MemScratch> list = memScratchDao.loadListPage(memScratch, start, limit);
+		for(MemScratch scratch : list){
+			Member member = memberDao.loadByOpenId(scratch.getOpenid());
+			scratch.setMember(member);
+		}
+		return list;
+	}
+	
+	public Long getListCount(MemScratch memScratch) throws Exception {
+		return memScratchDao.loadListCount(memScratch);
 	}
 }

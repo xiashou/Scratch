@@ -58,6 +58,24 @@ public class MemCouponAction extends BaseAction {
 		return SUCCESS;
 	}
 	
+	/**
+	 * 分页查询会员优惠券
+	 * @return
+	 */
+	public String queryListPage() {
+		try {
+			if (!Utils.isEmpty(super.getWxMaConfig())) {
+				if(Utils.isEmpty(memCoupon))
+					memCoupon = new MemCoupon();
+				this.setTotalCount(memCouponService.getListCount(memCoupon));
+				memCouponList = memCouponService.getListPage(memCoupon, this.getStart(), this.getLimit());
+	        } 
+		} catch(Exception e) {
+			log.error(Utils.getErrorMessage(e));
+		}
+		return SUCCESS;
+	}
+	
 	
 	public List<MemCoupon> getMemCouponList() {
 		return memCouponList;

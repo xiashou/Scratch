@@ -448,7 +448,7 @@ Ext.define('Ext.ux.desktop.Desktop', {
     		}),
     		valueField : 'value',
     		displayField : 'text',
-    		value : 500,
+    		value : 20,
     		editable : false,
     		width : 90
     	});

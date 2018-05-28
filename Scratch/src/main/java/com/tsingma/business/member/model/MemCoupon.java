@@ -19,11 +19,12 @@ public class MemCoupon {
 	private String openid;
 	private Integer actcouponId;
 	private String code;
-	private String qrcode;
 	private String endDate;
 	private Integer status;
 	private String createdTime;
 	
+	@Transient
+	private Member member;
 	@Transient
 	private Coupon coupon;
 	
@@ -51,12 +52,6 @@ public class MemCoupon {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	public String getQrcode() {
-		return qrcode;
-	}
-	public void setQrcode(String qrcode) {
-		this.qrcode = qrcode;
-	}
 	public String getEndDate() {
 		return endDate;
 	}
@@ -80,6 +75,12 @@ public class MemCoupon {
 	}
 	public void setCoupon(Coupon coupon) {
 		this.coupon = coupon;
+	}
+	public Member getMember() {
+		return member;
+	}
+	public void setMember(Member member) {
+		this.member = member;
 	}
 	
 }

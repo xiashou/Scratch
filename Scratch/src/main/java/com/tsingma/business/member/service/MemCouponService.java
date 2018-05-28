@@ -10,7 +10,9 @@ import com.tsingma.business.coupon.dao.ActCouponDao;
 import com.tsingma.business.coupon.dao.CouponDao;
 import com.tsingma.business.coupon.model.ActCoupon;
 import com.tsingma.business.member.dao.MemCouponDao;
+import com.tsingma.business.member.dao.MemberDao;
 import com.tsingma.business.member.model.MemCoupon;
+import com.tsingma.business.member.model.Member;
 
 @Service("memCouponService")
 @Transactional
@@ -22,6 +24,8 @@ public class MemCouponService {
 	private ActCouponDao actCouponDao;
 	@Autowired
 	private CouponDao couponDao;
+	@Autowired
+	private MemberDao memberDao;
 	
 	
 	/**
@@ -54,5 +58,20 @@ public class MemCouponService {
 			memCoupon.setCoupon(couponDao.get(actCoupon.getCouponId()));
 		}
 		return list;
+	}
+	
+	public List<MemCoupon> getListPage(MemCoupon mCoupon, int start, int limit) throws Exception {
+		List<MemCoupon> list = memCouponDao.loadListPage(mCoupon, start, limit);
+		for(MemCoupon memCoupon : list){
+			ActCoupon actCoupon = actCouponDao.get(memCoupon.getActcouponId());
+			memCoupon.setCoupon(couponDao.get(actCoupon.getCouponId()));
+			Member member = memberDao.loadByOpenId(memCoupon.getOpenid());
+			memCoupon.setMember(member);
+		}
+		return list;
+	}
+	
+	public Long getListCount(MemCoupon memCoupon) throws Exception {
+		return memCouponDao.loadListCount(memCoupon);
 	}
 }
