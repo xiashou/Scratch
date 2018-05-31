@@ -13,6 +13,8 @@ Ext.define('Business.MemberReport', {
     ],
 
     id:'member-rpt',
+    
+    title: '会员报表',
 
     init : function(){
         this.launcher = {
@@ -20,12 +22,13 @@ Ext.define('Business.MemberReport', {
             iconCls:'member'
         };
     },
+    
+    createNewWindow: function () {
+        var me = this,
+            desktop = me.app.getDesktop();
 
-    createWindow : function(){
-        var desktop = this.app.getDesktop();
-        var win = desktop.getWindow('member-rpt');
-        var store = new Ext.data.Store({
-    		pageSize : 20,
+        me.store = Ext.create('Ext.data.Store',{
+        	pageSize : 20,
     		fields: ['id', 'appid', 'unionId', 'openId', 'nickName', 'gender', 'language', 'city', 'province', 'country', 'avatarUrl', 'timestamp'],
     		proxy : {
     			type : 'ajax',
@@ -36,8 +39,10 @@ Ext.define('Business.MemberReport', {
     			}
     		}
     	});
+        
         var pagesizeCombo = desktop.getPagesizeCombo();
         var number = parseInt(pagesizeCombo.getValue());
+        
 	  	pagesizeCombo.on("select", function(comboBox) {
 	  		bbar.pageSize = parseInt(comboBox.getValue());
 	  		number = parseInt(comboBox.getValue());
@@ -50,17 +55,16 @@ Ext.define('Business.MemberReport', {
 	  		});
 	  	});
 	  	
-	  	var bbar = new Ext.PagingToolbar({
+	  	me.bbar = Ext.create('Ext.PagingToolbar',{
 	  		pageSize : number,
-	  		store : store,
+	  		store : me.store,
 	  		displayInfo : true,
 	  		displayMsg : '显示{0}条到{1}条,共{2}条',
 	  		emptyMsg : "没有符合条件的记录",
 	  		items : [ '-', '&nbsp;&nbsp;', pagesizeCombo ]
 	  	});
-	  	
-	  	var f = new Ext.form.FormPanel({
-    		id : 'f',
+        
+        me.f = Ext.create('Ext.form.FormPanel',{
     		layout : 'anchor',
     		defaults : {
     			anchor : '100%',
@@ -72,136 +76,74 @@ Ext.define('Business.MemberReport', {
     		items : [ {
     			defaults : {flex : 1,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
     			items : [ {
-    				id : 'name',
-    				name : 'store.name',
-    				fieldLabel : '商户名称',
+    				name : 'activity.name',
+    				fieldLabel : '产品标题',
     			},{
-    				id : 'phone',
-    				name : 'store.phone',
-    				fieldLabel : '联系电话',
-    			},{
-    				id : 'id',
-    				name : 'store.id',
+    				name : 'activity.id',
     				xtype: 'hiddenfield'
     			}]
     		},{
-    			defaults : {flex : 1,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
+    			defaults : {flex : 1,xtype : 'numberfield',labelWidth : 70,labelAlign : 'right'},
     			items : [{
-    				id : 'address',
-    				name: 'store.address',
-    				fieldLabel : '地址'
+    				name : 'activity.price',
+    				fieldLabel : '价格'
+    			},{
+    				name: 'activity.virNumber',
+    				fieldLabel : '虚拟参与数'
     			}]
     		},{
-    			defaults : {flex : 8,xtype : 'textfield',labelWidth : 70,labelAlign : 'right'},
-    			items: [ {
-    				id : 'locationx',
-    				name: 'store.locationx',
-    				fieldLabel : '地址x坐标',
-    				readOnly:true, 
+    			defaults : {flex : 1,xtype : 'numberfield',labelWidth : 70,labelAlign : 'right'},
+    			items : [{
+    				name : 'activity.broNumber',
+    				fieldLabel : '浏览人数',
+    				readOnly: true,
     				fieldStyle:'background-color: #F0F0F0;'
     			},{
-    				id : 'locationy',
-    				name: 'store.locationy',
-    				fieldLabel : '地址y坐标',
-    				readOnly:true, 
+    				name: 'activity.actNumber',
+    				fieldLabel : '实际参与数',
+    				readOnly: true,
     				fieldStyle:'background-color: #F0F0F0;'
-    			},{
-    				xtype: 'button',
-    				flex : 3,
-    				margin: '0 0 0 5',
-    				text: '选取地址',
-    				handler: function() {
-    					mw.update('<iframe src="/mgr/ux/map/map.jsp" width="100%" height="100%" frameborder="0"></iframe>');
-                    	mw.show();
-    			    }
     			}]
     		},{
-    			defaults : {flex : 1,xtype : 'textarea',labelWidth : 70,labelAlign : 'right'},
-    			items : [ {
-    				fieldLabel : '商户简介',
-    				id : 'introduction',
-    				name: 'store.introduction',
-    				rows: 3
-    			} ]
-    		},{
-    			defaults : {flex : 3,xtype : 'filefield',labelWidth : 70,labelAlign : 'right'},
-    			items : [ {
-    				fieldLabel : '小图',
-    				id : 'head',
-    				name: 'head',
-					buttonText: '浏览...',
-    				anchor : '99%'
-    			},{
-    				xtype : 'displayfield',
-    				flex : 1,
-					labelWidth : 5,
-    				fieldLabel : '&nbsp;',
-    				labelSeparator: '',
-    				value:'最佳尺寸180*180'
-    			} ]
-    		},{
-    			defaults : {flex : 3,xtype : 'filefield',labelWidth : 70,labelAlign : 'right'},
+    			defaults : {flex : 5,xtype : 'filefield',labelWidth : 70,labelAlign : 'right'},
     			items : [ {
     				fieldLabel : '大图',
-    				id : 'image',
     				name: 'image',
     				buttonText: '浏览...',
     				anchor : '99%'
     			},{
     				xtype : 'displayfield',
-    				flex : 1,
+    				flex : 2,
     				labelWidth : 5,
     				fieldLabel : '&nbsp;',
     				labelSeparator: '',
-    				value:'最佳尺寸750*408'
+    				value:'最佳尺寸540*518'
     			} ]
     		},{
     			defaults : {flex : 1,xtype : 'radiogroup',labelWidth : 70,labelAlign : 'right'},
     			items: [{
-    				id:'enable', 
-    				fieldLabel: '是否可用', 
-    				defaults: {name: 'store.enable'},
-		        	items: [{inputValue: true, boxLabel: '正常', checked: true}, {inputValue: false,boxLabel: '锁定'}]
+    				fieldLabel: '是否开启', 
+    				defaults: {name: 'activity.enable'},
+    	        	items: [{inputValue: true, boxLabel: '开启'}, {inputValue: false,boxLabel: '停止', checked: true}]
     			},{
     				xtype : 'displayfield',
-    				flex : 1,
     				fieldLabel : '&nbsp;',
     				labelSeparator: '',
     				value:''
     			}]
-    		} ],
-    		buttons : [ {
-    			text : '保 存',
-    			iconCls : 'accept',
-    			handler : function() {
-    				if (f.form.isValid()) {
-    					f.form.submit({
-    						waitTitle : '提示',
-    						method : 'POST',
-    						waitMsg : '正在处理数据,请稍候...',
-    						success : function(form, action) {
-    							w.hide();
-    							desktop.showMessage(action.result.msg);
-    							store.reload();
-    						},
-    						failure : function(form, action) {
-    							var msg = action.result.msg;
-    							Ext.MessageBox.alert('提示', msg);
-    						}
-    					});
-    				}
-    			}
-    		}, {
-    			text : '关 闭 ',
-    			iconCls : 'stop',
-    			handler : function() {
-    				mw.hide();
-    				w.hide();
-    			}
     		} ]
     	});
-	  	
-	  	var headRenderer = function(value, metaData, record) {
+        
+        me.tbar = [
+            {text:'查询', iconCls:'preview', handler: me.onSearch, scope: me }
+        ];
+        
+        me.buttons = [
+            {text:'查 询', iconCls:'preview', handler: me.onSubmit, scope: me },
+            {text:'关 闭', iconCls:'stop', handler: me.onCancel, scope: me }
+        ];
+        
+        me.headRenderer = function(value, metaData, record) {
     		if(value){
       			metaData.tdAttr = "data-qtip=\"<img src='" + value + "' style='width:120px; height:120px'/>\""; 
       			return '<img src="' + value + '" style="height:20px" onerror="this.src=\'/resources/img/noImage.png\'" />';
@@ -209,158 +151,124 @@ Ext.define('Business.MemberReport', {
       			return '<img src="/resources/img/noImage.png" style="height:20px" />';
         };
         
-        if(!win){
-            win = desktop.createWindow({
-                id: 'member-rpt',
-                title:'会员报表',
-                width:900,
-                height:580,
-                iconCls: 'member',
-                animCollapse:false,
-                constrainHeader:true,
-                layout: 'fit',
-                items: [{
-                	border: false,
-                    xtype: 'grid',
-                    store: store,
-                    stripeRows : true,
-                    frame : false,
-                    forceFit: true,
-                    viewConfig : {enableTextSelection : true},
-            		loadMask : {msg : '正在加载表格数据,请稍等...'},
-            		columns: [new Ext.grid.RowNumberer({
-	                    	header : 'No',
-	                		width : '4%'
-	                    }), {
-	                		dataIndex : 'id',
-	                		hidden: true
-	                    },{
-	                    	text : '头像',
-	                    	dataIndex : 'avatarUrl',
-	                		width : '10%',
-	                		renderer: headRenderer
-	                    },{
-	                    	text : '昵称',
-	                    	dataIndex : 'nickName',
-	                    	width : '25%'
-	                    },{
-	                    	text : '性别',
-	                		dataIndex : 'gender',
-	                		width : '10%'
-	                    },{
-	                    	text : '语言',
-	                    	dataIndex : 'language',
-	                    	width : '10%'
-	                    },{
-	                    	text : '城市',
-	                    	dataIndex : 'city',
-	                    	width : '10%'
-	                    },{
-	                    	text : '省份',
-	                    	dataIndex : 'province',
-	                    	width : '10%'
-	                    },{
-	                    	text : 'openId',
-	                    	dataIndex : 'openId',
-	                    	width : '17%'
-	                    }]
-                    }, w = Ext.create('Ext.Window', {
-                        width: 520,
-                        height: 350,
-                        constrain: true,
-                        layout: 'fit',
-                        items: [f]
-                    })
-                ],
-                tbar:[{
-                    text:'新增',
-                    iconCls:'add',
-                    handler : function() {
-                    	w.setTitle('新建商户');
-                    	f.getForm().reset();
-                    	f.getForm().url = '/biz/store/insertStore.atc';
-                    	w.show();
-        			}
-                }, {
-                    text:'修改',
-                    iconCls:'pencil',
-                    handler : function() {
-                    	var record = selModel.getSelection()[0];
-                		if (Ext.isEmpty(record)) {
-                			Ext.MessageBox.show({
-                				title : '提示',
-                				msg : '你没有选中任何项目！',
-                				buttons : Ext.MessageBox.OK,
-                				icon : Ext.MessageBox.INFO
-                			});
-                			return;
-                		}
-                    	w.setTitle('修改商户');
-                    	f.getForm().reset();
-                    	f.getForm().url = '/biz/store/updateStore.atc';
-                    	selModel.deselectAll();
-                		f.loadRecord(record);
-                		Ext.getCmp('enable').setValue({'store.enable' : record.data.enable});
-                    	w.show();
-        			}
-                }, {
-                    text:'删除',
-                    iconCls:'delete',
-                    handler: function(){
-                    	var record = selModel.getSelection()[0];
-                		if (Ext.isEmpty(record)) {
-                			Ext.MessageBox.show({
-                				title : '提示',
-                				msg : '你没有选中任何项目！',
-                				buttons : Ext.MessageBox.OK,
-                				icon : Ext.MessageBox.INFO
-                			});
-                			return;
-                		}
-                		Ext.Msg.confirm('请确认', '确定要删除这项吗?', function(btn, text) {
-                			if (btn == 'yes') {
-                				Ext.Ajax.request({
-                					url : '/biz/store/deleteStore.atc',
-                					params : {
-                						'store.id' : record.data.id
-                					},
-                					success : function(resp, opts) {
-                						var result = Ext.decode(resp.responseText);
-                						if (result.success) {
-                							desktop.showMessage(result.msg);
-                							selModel.deselectAll();
-                							store.reload();
-                						} else
-                							Ext.MessageBox.show({
-                								title : '提示',
-                								msg : result.msg,
-                								buttons : Ext.MessageBox.OK,
-                								icon : Ext.MessageBox.ERROR
-                							});
-                					},
-                					failure : function(resp, opts) {
-                						var result = Ext.decode(resp.responseText);
-                						Ext.MessageBox.show({
-                							title : '提示',
-                							msg : result.msg,
-                							buttons : Ext.MessageBox.OK,
-                							icon : Ext.MessageBox.ERROR
-                						});
-                					}
-                				});
-                			}
-                		});
-                    }
-                }],
-                bbar:bbar,
-                listeners: {
-                    show: function() {
-                    	store.load();
-                    }
+        me.subwin = Ext.create('Ext.Window', {
+            width: 420,
+            height: 230,
+            constrain: true,
+            layout: 'fit',
+            closeAction: 'hide',
+            items: [me.f],
+            buttons: me.buttons
+        });
+    	
+        return desktop.createWindow({
+            id: me.id,
+            title: me.title,
+            width:900,
+            height:580,
+            iconCls: 'member',
+            animCollapse:false,
+            constrainHeader:true,
+            layout: 'fit',
+            items: [{
+            	border: false,
+                xtype: 'grid',
+                store: me.store,
+                stripeRows: true,
+                frame: false,
+                forceFit: true,
+                viewConfig: {enableTextSelection : true},
+        		loadMask: {msg : '正在加载表格数据,请稍等...'},
+        		columns: [new Ext.grid.RowNumberer({
+                    	header : 'No',
+                		width : '4%'
+                    }), {
+                		dataIndex : 'id',
+                		hidden: true
+                    },{
+                    	text : '头像',
+                    	dataIndex : 'avatarUrl',
+                		width : '6%',
+                		renderer: me.headRenderer
+                    },{
+                    	text : '昵称',
+                    	dataIndex : 'nickName',
+                    	width : '25%'
+                    },{
+                    	text : '性别',
+                		dataIndex : 'gender',
+                		width : '10%',
+                		renderer: function(value){
+            				return value==1?'男':(value==2?'女':'未知');
+            			}
+                    },{
+                    	text : '语言',
+                    	dataIndex : 'language',
+                    	width : '10%'
+                    },{
+                    	text : '城市',
+                    	dataIndex : 'city',
+                    	width : '10%'
+                    },{
+                    	text : '省份',
+                    	dataIndex : 'province',
+                    	width : '10%'
+                    },{
+                    	text : 'openId',
+                    	dataIndex : 'openId',
+                    	width : '21%'
+                    }]
+                }, me.subwin
+            ],
+            tbar: me.tbar,
+            bbar: me.bbar,
+            listeners: {
+                show: function() {
+                	me.store.load();
                 }
-            });
+            }
+        });
+    },
+
+    createWindow : function(){
+    	var win = this.app.getDesktop().getWindow(this.id);
+        if (!win) {
+            win = this.createNewWindow();
         }
         return win;
+    },
+    
+    onSearch: function() {
+    	var me = this;
+    	me.subwin.setTitle('查询');
+    	me.f.getForm().reset();
+    	me.f.getForm().url = '/biz/activity/insertActivity.atc';
+    	me.subwin.show();
+    },
+    
+    onSubmit: function() {
+    	var me = this, desktop = me.app.getDesktop();
+    	if (me.f.form.isValid()) {
+			me.f.form.submit({
+				waitTitle : '提示',
+				method : 'POST',
+				waitMsg : '正在处理数据,请稍候...',
+				success : function(form, action) {
+					me.subwin.hide();
+					desktop.showMessage(action.result.msg);
+					me.store.reload();
+				},
+				failure : function(form, action) {
+					var msg = action.result.msg;
+					Ext.MessageBox.alert('提示', msg);
+				}
+			});
+		}
+    },
+    
+    onCancel: function() {
+    	var me = this;
+    	me.subwin.hide();
     }
 
 });

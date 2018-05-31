@@ -12,7 +12,9 @@ Ext.define('Business.ActivityManagement', {
         'Ext.grid.RowNumberer'
     ],
 
-    id:'activity-mgr',
+    id: 'activity-mgr',
+    
+    title: '活动管理',
 
     init: function(){
         this.launcher = {
@@ -141,8 +143,8 @@ Ext.define('Business.ActivityManagement', {
         });
     	
         return desktop.createWindow({
-            id: 'activity-mgr',
-            title:'活动管理',
+            id: me.id,
+            title: me.title,
             width:800,
             height:480,
             iconCls: 'activity',
@@ -196,7 +198,7 @@ Ext.define('Business.ActivityManagement', {
                     	dataIndex : 'enable',
                     	width : '10%',
                     	renderer: function(value){
-            				return value ? '<font color=green>正常</font>' : '<font color=red>锁定</font>'
+            				return value ? '<font color=green>正常</font>' : '<font color=red>锁定</font>';
             			}
                     },{
                     	text : '创建时间',
