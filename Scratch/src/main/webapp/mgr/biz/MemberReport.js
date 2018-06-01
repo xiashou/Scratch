@@ -44,13 +44,13 @@ Ext.define('Business.MemberReport', {
         var number = parseInt(pagesizeCombo.getValue());
         
 	  	pagesizeCombo.on("select", function(comboBox) {
-	  		bbar.pageSize = parseInt(comboBox.getValue());
+	  		me.bbar.pageSize = parseInt(comboBox.getValue());
 	  		number = parseInt(comboBox.getValue());
-	  		store.pageSize = parseInt(comboBox.getValue());
-	  		store.reload({
+	  		me.store.pageSize = parseInt(comboBox.getValue());
+	  		me.store.reload({
 	  			params : {
 	  				start : 0,
-	  				limit : bbar.pageSize
+	  				limit : me.bbar.pageSize
 	  			}
 	  		});
 	  	});

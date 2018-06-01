@@ -53,6 +53,10 @@ public class MemberService {
 		return memberDao.loadListPage(member, start, limit);
 	}
 	
+	public Long getListCount(Member member) throws Exception {
+		return memberDao.loadListCount(member);
+	}
+	
 	public void insert(Member member) throws Exception {
 		memberDao.save(member);
 	}

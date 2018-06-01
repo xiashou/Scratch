@@ -25,8 +25,8 @@ Ext.define('MyDesktop.App', {
 //        'MyDesktop.Blockalanche',
         
         'System.AccountManagement',			//系统用户管理
+        'System.StoreManagement',			//门店管理
         
-        'Business.StoreManagement',			//门店管理
         'Business.CouponManagement',		//商家优惠券管理
         'Business.ActCouponManagement',		//活动优惠券管理
         'Business.ScratchSetting',			//刮奖设置
@@ -52,8 +52,8 @@ Ext.define('MyDesktop.App', {
     	if(BB == 0){
     		return [
     			new System.AccountManagement(),
+    			new System.StoreManagement(),
     			new Business.BannerManagement(),
-    			new Business.StoreManagement(),
     			new Business.ActivityManagement(),
     			new Business.ActCouponManagement(),
     			new Business.MemCouponManagement(),

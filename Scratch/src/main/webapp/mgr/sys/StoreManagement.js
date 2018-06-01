@@ -3,7 +3,7 @@
  * xs
  * 2018/04/03
  */
-Ext.define('Business.StoreManagement', {
+Ext.define('System.StoreManagement', {
 	extend: 'Ext.ux.desktop.Module',
 
     requires: [

@@ -39,6 +39,7 @@ public class MemberAction extends BaseAction {
 				if(Utils.isEmpty(member))
 					member = new Member();
 				member.setAppid(super.getWxMaConfig().getAppid());
+				this.setTotalCount(memberService.getListCount(member));
 				memberList = memberService.getListPage(member, this.getStart(), this.getLimit());
 	        } 
 		} catch(Exception e) {

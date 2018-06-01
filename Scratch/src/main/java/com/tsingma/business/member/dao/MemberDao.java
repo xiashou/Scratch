@@ -28,20 +28,46 @@ public class MemberDao extends BaseDao<Member, Serializable> {
 		return super.uniqueResult("openId", openId);
 	}
 	
+	/**
+	 * 分页查询会员
+	 * @param member
+	 * @param start
+	 * @param limit
+	 * @return
+	 * @throws Exception
+	 */
 	public List<Member> loadListPage(Member member, int start, int limit) throws Exception {
-		return super.listPage(connectionCriteria(member), start, limit);
+		CriteriaBuilder builder = super.getSession().getCriteriaBuilder();  
+		CriteriaQuery<Member> query = builder.createQuery(Member.class);
+        List<Predicate> predicatesList = new ArrayList<Predicate>();
+        Root<Member> root = query.from(Member.class); 
+        query.select(root);
+        if(!Utils.isEmpty(member.getNickName()))
+        	predicatesList.add(builder.equal(root.get("nickName"), member.getNickName()));
+        if(!Utils.isEmpty(member.getGender()))
+        	predicatesList.add(builder.equal(root.get("gender"), member.getGender()));
+        query.where(predicatesList.toArray(new Predicate[predicatesList.size()]));
+		return super.listPage(query, start, limit);
 	}
 	
-	private CriteriaQuery<Member> connectionCriteria(Member member){
-		CriteriaBuilder crb = super.getSession().getCriteriaBuilder();  
-        CriteriaQuery<Member> crq = crb.createQuery(Member.class);
-        List<Predicate> predicatesList = new ArrayList<Predicate>();
-        Root<Member> root=crq.from(Member.class);  
-        crq.select(root);
-        predicatesList.add(crb.equal(root.get("appid"), member.getAppid()));
-        if(!Utils.isEmpty(member.getNickName()))
-        	predicatesList.add(crb.equal(root.get("nickName"), member.getNickName()));
-        crq.where(predicatesList.toArray(new Predicate[predicatesList.size()]));
-        return crq;
+	/**
+	 * 分页总数
+	 * @param store
+	 * @return
+	 * @throws Exception
+	 */
+	public Long loadListCount(Member member) throws Exception {
+		CriteriaBuilder builder = super.getSession().getCriteriaBuilder();  
+		CriteriaQuery<Long> query = builder.createQuery(Long.class);
+		List<Predicate> predicatesList = new ArrayList<Predicate>();
+		Root<Member> root = query.from(Member.class);  
+		query.select(builder.count(root));
+		if(!Utils.isEmpty(member.getNickName()))
+        	predicatesList.add(builder.equal(root.get("nickName"), member.getNickName()));
+        if(!Utils.isEmpty(member.getGender()))
+        	predicatesList.add(builder.equal(root.get("gender"), member.getGender()));
+		query.where(predicatesList.toArray(new Predicate[predicatesList.size()]));
+		return super.listCount(query);
 	}
+	
 }
